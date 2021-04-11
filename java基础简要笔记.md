@@ -261,7 +261,7 @@ default:
 
 ## 循环结构
 
-**For循环结构的使用**
+### For循环结构的使用
 一、循环结构的4个要素
 ① 初始化条件
 ② 循环条件  --->是boolean类型
@@ -323,5 +323,145 @@ class ForTest {
 }
 ```
 
+###While 循环的使用
 
+一、循环结构的4个要素
+① 初始化条件
+② 循环条件  --->是boolean类型
+③ 循环体
+④ 迭代条件
+
+二、while循环的结构
+
+①
+while(②){
+	③;
+	④;
+}
+
+执行过程：① - ② - ③ - ④ - ② - ③ - ④ - ... - ②
+
+说明：
+1.写while循环千万小心不要丢了迭代条件。一旦丢了，就可能导致死循环！
+2.我们写程序，要避免出现死循环。
+3.for循环和while循环是可以相互转换的！ 
+  区别：for循环和while循环的初始化条件部分的作用范围不同。
+
+### do-while循环的使用
+
+一、循环结构的4个要素
+① 初始化条件
+② 循环条件  --->是boolean类型
+③ 循环体
+④ 迭代条件
+
+二、do-while循环结构：
+
+①
+do{
+	③;
+	④;
+
+}while(②);
+
+执行过程：① - ③ - ④ - ② - ③ - ④ - ... - ②
+
+说明：
+1.do-while循环至少会执行一次循环体！
+2.开发中，使用for和while更多一些。较少使用do-while
+
+eg: 从键盘读入个数不确定的整数，并判断读入的正数和负数的个数，输入为0时结束程序。
+
+```java
+import java.util.Scanner;
+
+class ForWhileTest {
+	public static void main(String[] args) {
+		
+		Scanner scan = new Scanner(System.in);
+		
+		int positiveNumber = 0;//记录正数的个数
+		int negativeNumber = 0;//记录负数的个数
+
+		for(;;){//while(true){
+			
+			int number = scan.nextInt();
+
+			//判断number的正负情况
+			if(number > 0){
+				positiveNumber++;
+			}else if(number < 0){
+				negativeNumber++;
+			}else{
+				//一旦执行break，跳出循环
+				break;
+			}
+
+		}
+
+		System.out.println("输入的正数个数为：" + positiveNumber);
+		System.out.println("输入的负数个数为：" + negativeNumber);
+		
+
+	}
+}
+```
+
+==说明==：
+
+1. 不在循环条件部分限制次数的结构：for(;;) 或 while(true)
+2. 结束循环有几种方式？
+     方式一：循环条件部分返回false
+	 方式二：在循环体中，执行break
+
+## break continue  (加laber)
+
+> break和continue关键字的使用
+> 				使用范围			循环中使用的作用(不同点)		相同点
+> break:			switch-case			
+> 				循环结构中			结束当前循环					关键字后面不能声明执行语句	
+>
+> continue:		循环结构中			结束当次循环					关键字后面不能声明执行语句
+>
+> 
+
+eg:
+
+```java
+class BreakContinueTest {
+	public static void main(String[] args) {
+
+		for(int i = 1;i <= 10;i++){
+		
+			if(i % 4 == 0){
+				break;//123
+				//continue;//123567910
+				//System.out.println("今晚迪丽热巴要约我！！！");
+			}
+			System.out.print(i);
+		}
+
+		System.out.println("\n");
+		//******************************
+		
+		label:for(int i = 1;i <= 4;i++){
+		
+			for(int j = 1;j <= 10;j++){
+				
+				if(j % 4 == 0){
+					//break;//默认跳出包裹此关键字最近的一层循环。
+					//continue;
+
+					//break label;//结束指定标识的一层循环结构
+					continue label;//结束指定标识的一层循环结构当次循环
+				}
+				
+				System.out.print(j);
+			}
+			
+			System.out.println();
+		}
+	}
+}
+```
 

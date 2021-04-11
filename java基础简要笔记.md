@@ -128,7 +128,7 @@
 
 ## 分枝结构
 
-分支结构中的if-else（条件判断结构）
+**分支结构中的if-else（条件判断结构）**
 
 * 一、三种结构
 
@@ -156,6 +156,29 @@
   else{
   	执行表达式n
   }
+
+  说明：
+  1. else 结构是可选的。
+
+  2. 针对于条件表达式：
+     > * 如果多个条件表达式之间是“互斥”关系(或没有交集的关系),哪个判断和执行语句声明在上面还是下面，无所谓。
+     > * 如果多个条件表达式之间有交集的关系，需要根据实际情况，考虑清楚应该将哪个结构声明在上面。
+     > * 如果多个条件表达式之间有包含的关系，通常情况下，需要将范围小的声明在范围大的上面。否则，范围小的就没机会执行了
+
+  3.  else没大括号时就近原则
+
+     ```java 
+     int x = 4;
+     		int y = 1;
+     		if (x > 2) 
+     			if (y > 2) 
+                     System.out.println(x + y);
+     				//System.out.println("atguigu");
+     			else //就近原则
+     				System.out.println("x is " + x);
+     ```
+
+     
 
   ```java 
   class IfTest {
@@ -196,3 +219,109 @@
   ```
 
   
+
+**分支结构之二：switch-case**
+
+1.格式
+switch(表达式){
+case 常量1:
+	执行语句1;
+	//break;
+
+case 常量2:
+	执行语句2;
+	//break;
+
+...
+
+default:
+	执行语句n;
+	//break;
+
+}
+
+2.说明：
+① 根据switch表达式中的值，依次匹配各个case中的常量。一旦匹配成功，则进入相应case结构中，调用其执行语句。
+  当调用完执行语句以后，则仍然继续向下执行其他case结构中的执行语句，直到遇到break关键字或此switch-case结构
+  末尾结束为止。
+
+② break,可以使用在switch-case结构中，表示一旦执行到此关键字，就跳出switch-case结构
+
+③ switch结构中的表达式，只能是如下的6种数据类型之一：
+   byte 、short、char、int、枚举类型(JDK5.0新增)、String类型(JDK7.0新增)
+
+④ case 之后只能声明常量。不能声明范围。
+
+⑤ break关键字是可选的。
+
+⑥  default:相当于if-else结构中的else.  
+  default结构是可选的，而且位置是灵活的。
+
+如果switch-case结构中的多个case的执行语句相同，则可以考虑进行合并
+
+## 循环结构
+
+**For循环结构的使用**
+一、循环结构的4个要素
+① 初始化条件
+② 循环条件  --->是boolean类型
+③ 循环体
+④ 迭代条件
+
+二、for循环的结构
+
+for(①;②;④){
+	③
+}
+
+执行过程：① - ② - ③ - ④ - ② - ③ - ④ - ... - ②
+
+```java 
+class ForTest {
+	public static void main(String[] args) {
+
+		/*
+		System.out.println("Hello World!");
+		System.out.println("Hello World!");
+		System.out.println("Hello World!");
+		System.out.println("Hello World!");
+		System.out.println("Hello World!");
+		*/
+
+		for(int i = 1;i <= 5;i++){//i:1,2,3,4,5
+			System.out.println("Hello World!");
+		}
+		//i:在for循环内有效。出了for循环就失效了。
+		//System.out.println(i);
+		
+		//练习：
+		int num = 1;
+		for(System.out.print('a');num <= 3;System.out.print('c'),num++){
+			System.out.print('b');
+		}
+		//输出结果：abcbcbc
+
+		System.out.println();
+
+		//例题：遍历100以内的偶数,输出所有偶数的和,输出偶数的个数
+		int sum = 0;//记录所有偶数的和
+		int count = 0;//记录偶数的个数
+		for(int i = 1;i <= 100;i++){
+			
+			if(i % 2 == 0){
+				System.out.println(i);
+				sum += i;
+				count++;
+			}
+			//System.out.println("总和为：" + sum);
+		}
+
+		System.out.println("总和为：" + sum);
+		System.out.println("个数为：" + count);
+
+	}
+}
+```
+
+
+

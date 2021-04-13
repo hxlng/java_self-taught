@@ -602,3 +602,105 @@ for(int i = 0;i < names.length;i++){
 7.二维数组的内存结构
 
 <a href="https://sm.ms/image/6OuJhiAXnleML2g" target="_blank"><img src="https://i.loli.net/2021/04/12/6OuJhiAXnleML2g.png" ></a>
+
+### 数组的常见算法
+
+<a href="https://sm.ms/image/4oMwWDdA5vGJi9Y" target="_blank"><img src="https://i.loli.net/2021/04/13/4oMwWDdA5vGJi9Y.png" ></a>
+
+理解：
+1）衡量排序算法的优劣：
+时间复杂度、空间复杂度、稳定性
+
+2）排序的分类：内部排序 与 外部排序（需要借助于磁盘）
+
+<a href="https://sm.ms/image/SpGc3U9z8i2WCEY" target="_blank"><img src="https://i.loli.net/2021/04/13/SpGc3U9z8i2WCEY.png" ></a>
+
+4）手写冒泡排序
+
+```java
+int[] arr = new int[]{43,32,76,-98,0,64,33,-21,32,99};
+		
+		//冒泡排序
+		for(int i = 0;i < arr.length - 1;i++){
+			
+			for(int j = 0;j < arr.length - 1 - i;j++){
+				
+				if(arr[j] > arr[j + 1]){
+					int temp = arr[j];
+					arr[j] = arr[j + 1];
+					arr[j + 1] = temp;
+				}
+				
+			}
+			
+		}		
+```
+
+### Arrays工具类的使用
+
+1.理解：
+① 定义在java.util包下。
+② Arrays:提供了很多操作数组的方法。
+
+2.使用：
+
+	//1.boolean equals(int[] a,int[] b):判断两个数组是否相等。
+		int[] arr1 = new int[]{1,2,3,4};
+		int[] arr2 = new int[]{1,3,2,4};
+		boolean isEquals = Arrays.equals(arr1, arr2);
+		System.out.println(isEquals);
+		
+		//2.String toString(int[] a):输出数组信息。
+		System.out.println(Arrays.toString(arr1));
+
+
+​			
+		//3.void fill(int[] a,int val):将指定值填充到数组之中。
+		Arrays.fill(arr1,10);
+		System.out.println(Arrays.toString(arr1));
+
+
+		//4.void sort(int[] a):对数组进行排序。
+		Arrays.sort(arr2);
+		System.out.println(Arrays.toString(arr2));
+		
+		//5.int binarySearch(int[] a,int key)
+		int[] arr3 = new int[]{-98,-34,2,34,54,66,79,105,210,333};
+		int index = Arrays.binarySearch(arr3, 210);
+		if(index >= 0){
+			System.out.println(index);
+		}else{
+			System.out.println("未找到");
+		}
+### 数组的常见异常
+
+```java
+1.数组角标越界异常：ArrayIndexOutOfBoundsException
+
+		int[] arr = new int[]{1,2,3,4,5};
+		
+//		for(int i = 0;i <= arr.length;i++){
+//			System.out.println(arr[i]);
+//		}
+		
+//		System.out.println(arr[-2]);
+		
+//		System.out.println("hello");
+2.空指针异常：NullPointerException
+	//情况一：
+//		int[] arr1 = new int[]{1,2,3};
+//		arr1 = null;
+//		System.out.println(arr1[0]);
+		
+		//情况二：
+//		int[][] arr2 = new int[4][];
+//		System.out.println(arr2[0][0]);
+		
+		//情况：
+		String[] arr3 = new String[]{"AA","BB","CC"};
+		arr3[0] = null;
+		System.out.println(arr3[0].toString());
+
+小知识：一旦程序出现异常，未处理时，就终止执行。
+```
+

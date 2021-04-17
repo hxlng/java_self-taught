@@ -655,9 +655,9 @@ int[] arr = new int[]{43,32,76,-98,0,64,33,-21,32,99};
 
 
 ​			
-		//3.void fill(int[] a,int val):将指定值填充到数组之中。
-		Arrays.fill(arr1,10);
-		System.out.println(Arrays.toString(arr1));
+​		//3.void fill(int[] a,int val):将指定值填充到数组之中。
+​		Arrays.fill(arr1,10);
+​		System.out.println(Arrays.toString(arr1));
 
 
 		//4.void sort(int[] a):对数组进行排序。
@@ -702,5 +702,264 @@ int[] arr = new int[]{43,32,76,-98,0,64,33,-21,32,99};
 		System.out.println(arr3[0].toString());
 
 小知识：一旦程序出现异常，未处理时，就终止执行。
+```
+
+# 面向对象
+
+## 类与对象
+
+1. 面向对象学习的三条主线：
+
+   * Java类及类的成员：属性、方法、构造器、代码块、内部类
+   * 面向对象的三大特征：封装性、继承性、多态性、（抽象性）
+   * 其它关键字：this、super、static、final、abstract、interface、package、import等
+
+2. 面向对象与面向过程（理解）
+
+   * 面向过程：强调的是功能行为，以函数为最小单位，考虑怎么做
+   * 面向对象：强调具备了功能的对象，以类/对象为最小单位，考虑谁来做。
+
+3. 面向对象中两个重要的概念：
+
+   * 类：对一类事物的描述，是抽象的，概念上的定义
+   * 对象：是实际存在的该类事物的每个个体，因而也称为实例（instance）
+     * 面向对象程序设计的重点是类的设计
+     * 设计类，就是设计类的成员
+
+   二者关系：
+
+   对象，是由类new出来的，派生出来的。
+
+4. 面向对象思想落地实现的规则一
+
+   * 创建类，设计类的成员
+   
+   * 创建类的对象
+   
+* 通过“对象.属性”或“对象.方法”调用对象的结构
+   
+   * 补充：几个概念的使用说明
+   
+      属性 = 成员变量 = field = 域、字段
+      方法 = 成员方法 = 函数 = method
+      创建类的对象 = 类的实例化 = 实例化类
+   
+5. 对象的创建与对象的内存解析
+
+   典型代码：
+   Person p1 = new Person();
+   Person p2 = new Person();
+   Person p3 = p1;//没有新创建一个对象，共用一个堆空间中的对象实体。
+
+   说明：
+   如果创建了一个类的多个对象，则每个对象都独立的拥有一套类的属性。（非static的）
+   意味着：如果我们修改一个对象的属性a，则不影响另外一个对象属性a的值。
+
+   内存解析
+
+   <a href="https://sm.ms/image/d6ApmFg4aXqcPCJ" target="_blank"><img src="https://i.loli.net/2021/04/17/d6ApmFg4aXqcPCJ.png" ></a>
+
+<a href="https://sm.ms/image/4XgUHCdDJo2FM3R" target="_blank"><img src="https://i.loli.net/2021/04/17/4XgUHCdDJo2FM3R.png" ></a>
+
+6. 匿名对象:我们创建的对象，没显式的赋给一个变量名。即为匿名对象
+
+   特点：匿名对象只能调用一次。
+
+   ```java
+   举例：
+   	new Phone().sendEmail();
+   		new Phone().playGame();
+   		
+   		new Phone().price = 1999;
+   		new Phone().showPrice();//0.0
+   应用场景：
+   PhoneMall mall = new PhoneMall();
+   
+   //匿名对象的使用
+   mall.show(new Phone());
+   其中，
+   class PhoneMall{
+   	public void show(Phone phone){
+   		phone.sendEmail();
+   		phone.playGame();
+   	}
+   	
+   }
+   ```
+
+7. 理解"万事万物皆对象"
+
+   * 在Java语言范畴中，我们都将功能、结构等封装到类中，通过类的实例化，来调用具体的功能结构
+
+     >Scanner,String等
+     >
+     >文件：File
+     >
+     >网络资源：URL
+
+## JVM内存结构
+
+编译完源程序以后，生成一个或多个字节码文件。
+
+我们使用JVM中的类的加载器和解释器对生成的字节码文件进行解释运行。意味着，需要将字节码文件对应的类加载到内存中，涉及到内存解析。
+
+<a href="https://sm.ms/image/A1BaRYk4gbx6oPW" target="_blank"><img src="https://i.loli.net/2021/04/17/A1BaRYk4gbx6oPW.png" ></a>
+
+《JVM规范》
+
+虚拟机栈，即为平时提到的栈结构。我们将局部变量存储在栈结构中
+堆，我们将new出来的结构（比如：数组、对象）加载在对空间中。补充：对象的属性（非static的）加载在堆空间中。
+方法区：类的加载信息、常量池、静态域
+
+### 类的结构之一：属性
+
+对比：属性  vs  局部变量
+
+1.相同点：
+ * 		1.1  定义变量的格式：数据类型  变量名 = 变量值
+ * 		1.2 先声明，后使用
+ * 		1.3 变量都其对应的作用域 
+
+2.不同点：
+
+
+
+2.1 在类中声明的位置的不同
+
+属性：直接定义在类的一对{}内
+
+局部变量：声明在方法内、方法形参、代码块内、构造器形参、构造器内部的变量
+
+2.2 关于权限修饰符的不同
+
+属性：可以在声明属性时，指明其权限，使用权限修饰符。
+
+常用的权限修饰符：private、public、缺省、protected  --->封装性
+
+
+
+局部变量：不可以使用权限修饰符。
+
+
+
+2.3 默认初始化值的情况：
+
+属性：类的属性，根据其类型，都默认初始化值。
+
+整型（byte、short、int、long：0）
+
+浮点型（float、double：0.0）
+
+字符型（char：0  （或'\u0000'））
+
+布尔型（boolean：false）
+
+
+
+引用数据类型（类、数组、接口：null）
+
+局部变量：没默认初始化值。
+
+意味着，我们在调用局部变量之前，一定要显式赋值。
+
+特别地：形参在调用时，我们赋值即可。
+
+
+
+2.4 在内存中加载的位置：
+
+属性：加载到堆空间中   （非static）
+
+局部变量：加载到栈空间
+
+<a href="https://sm.ms/image/faHuGNS4YtI7vzC" target="_blank"><img src="https://i.loli.net/2021/04/17/faHuGNS4YtI7vzC.png" ></a>
+
+### 类的结构之二：方法
+
+1. 方法的声明
+
+   方法的声明：权限修饰符  返回值类型  方法名(形参列表){
+
+   方法体
+
+   }
+
+   注意：static、final、abstract 来修饰的方法，后面再讲。
+
+2. 关于权限修饰符：默认方法的权限修饰符先都使用public
+
+   Java规定的4种权限修饰符：private、public、缺省、protected  -->封装性再细说
+
+3. 返回值类型： 返回值  vs 没返回值
+
+   如果方法返回值，则必须在方法声明时，指定返回值的类型。同时，方法中，需要使用return关键字来返回指定类型的变量或常量：“return 数据”。
+
+   如果方法没返回值，则方法声明时，使用void来表示。通常，没返回值的方法中，就不需要使用return.但是，如果使用的话，只能“return;”表示结束此方法的意思。
+
+4. 方法的使用中，可以调用当前类的属性或方法
+
+   特殊的：方法A中又调用了方法A:递归方法。
+
+   方法中，不可以定义方法。
+
+#### return关键字
+
+1.使用范围：使用在方法体中
+2.作用：
+
+① 结束方法
+
+② 针对于返回值类型的方法，使用"return 数据"方法返回所要的数据。
+3.注意点：return关键字后面不可以声明执行语句。
+
+#### 方法的重载
+
+1. 方法的重载的概念
+
+   定义：在同一个类中，允许存在一个以上的同名方法，只要它们的参数个数或者参数类型不同即可。
+
+   总结："两同一不同":同一个类、相同方法名
+                参数列表不同：参数个数不同，参数类型不同
+
+#### 可变个数形参的方法
+
+1. 使用说明
+    * 1.jdk 5.0新增的内容
+    * 2.具体使用：
+    *   2.1 可变个数形参的格式：数据类型 ... 变量名
+    *   2.2 当调用可变个数形参的方法时，传入的参数个数可以是：0个，1个,2个，。。。
+    *   2.3 可变个数形参的方法与本类中方法名相同，形参不同的方法之间构成重载
+    *   2.4 可变个数形参的方法与本类中方法名相同，形参类型也相同的数组之间不构成重载。换句话说，二者不能共存。
+    *   2.5 可变个数形参在方法的形参中，必须声明在末尾
+    * 	 2.6  可变个数形参在方法的形参中,最多只能声明一个可变形参。
+
+2.举例说明
+
+```java
+public void show(int i){
+		
+	}
+	
+	public void show(String s){
+		System.out.println("show(String)");
+	}
+	
+	public void show(String ... strs){
+		System.out.println("show(String ... strs)");
+		
+		for(int i = 0;i < strs.length;i++){
+			System.out.println(strs[i]);
+		}
+	}
+	//不能与上一个方法同时存在
+//	public void show(String[] strs){
+//		
+//	}
+调用时：
+		test.show("hello");
+		test.show("hello","world");
+		test.show();
+		
+		test.show(new String[]{"AA","BB","CC"});
 ```
 

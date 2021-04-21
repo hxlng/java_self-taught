@@ -1082,3 +1082,178 @@ public void show(int i){
    * 如果在源文件中，使用了不同包下的同名的类，则**必须至少一个类需要以全类名的方式显示。**
    * import static:导入指定类或接口中的静态结构:属性或方法。 
 
+## 面向对象的特征二：继承性
+
+1. 为什么要有类的继承性？（好处）
+
+   * 减少了代码的冗余，提高了代码的复用性
+
+   * 便于功能的扩展
+
+   * 为之后多态性的使用，提供了前提
+
+     <a href="https://sm.ms/image/3qcuCNx5wdlLIF7" target="_blank"><img src="https://i.loli.net/2021/04/21/3qcuCNx5wdlLIF7.png" ></a>
+
+2. 继承性的格式
+
+```java 
+//A:子类、派生类、subclass
+//B:父类、超类、基类、superclass
+class A extends B{}
+```
+
+3. 子类继承父类以后有哪些不同？
+
+   3.1. 体现：一旦子类A继承父类B以后，子类A中就获取了父类B中声明的所有的属性和方法
+
+   ​		==特别的== 特别的，父类中声明为private的属性或方法，子类继承父类以后，仍然认为获取了父类中私的结构。只因为封装性的影响，使得子类不能直接调用父类的结构而已。
+
+   3.2子类继承父类以后，还可以声明自己特有的属性或方法：实现功能的拓展。
+
+   ​			子类和父类的关系，不同于子集和集合的关系。
+
+   ​             extends：延展、扩展
+
+4. Java中继承性的说明
+
+   * 一个类可以被多个子类继承
+
+   * Java中==类的单继承性== ：一个类只能有一个父类
+
+   * 子父类是相对概念
+
+   * 子类直接继承的父类，成为：直接父类。间接继承的父类成为：间接父类
+
+   * 子类继承父类以后，就获取了直接父类以及所间接父类中声明的属性和方法
+
+     <a href="https://sm.ms/image/7GwA68WfLe4Yu5J" target="_blank"><img src="https://i.loli.net/2021/04/21/7GwA68WfLe4Yu5J.png" ></a>
+
+5. java.lang.Object类的理解
+
+   * 如果我们没显示的声明一个类的父类的话，则此类继承于java.lang.Object
+
+   * 所有的java类（除java.lang.Object类之外都直接或间接的继承于java.lang.Object类）
+
+   * 意味着，所有的java类具有java.lang.Object类声明的功能
+
+     
+
+例子
+
+Creature.java
+
+```java
+public class Creature {
+	
+	public void breath(){
+		System.out.println("呼吸");
+	}
+	
+}
+```
+
+Person.java
+
+```java
+public class Person extends Creature{
+	
+	String name;
+	private int age;
+	
+	public Person(){
+		
+	}
+	
+	public Person(String name,int age){
+		this.name = name;
+		this.age = age;
+	}
+	
+	public void eat(){
+		System.out.println("吃饭");
+		sleep();
+	}
+	
+	private void sleep(){
+		System.out.println("睡觉");
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+	
+	
+}
+```
+
+Student.java
+
+```java
+public class Student extends Person{
+	
+//	String name;
+//	int age;
+	String major;
+	
+	public Student(){
+		
+	}
+	public Student(String name,int age,String major){
+		this.name = name;
+//		this.age = age;
+		setAge(age);
+		this.major = major;
+	}
+//	public void eat(){
+//		System.out.println("吃饭");
+//	}
+//	
+//	public void sleep(){
+//		System.out.println("睡觉");
+//	}
+	
+	public void study(){
+		System.out.println("学习");
+	}
+	
+	public void show(){
+		System.out.println("name:" + name + ",age:" + getAge());
+	}
+	
+}
+
+```
+
+ExtendsTest.java
+
+```java
+public class ExtendsTest {
+	public static void main(String[] args) {
+		
+		Person p1 = new Person();
+//		p1.age = 1;
+		p1.eat();
+		System.out.println("*****************");
+		
+		Student s1 = new Student();
+		s1.eat();
+//		s1.sleep();
+		s1.name = "Tom";
+		s1.setAge(10);
+		System.out.println(s1.getAge());
+		
+		s1.breath();
+		
+		
+		Creature c = new Creature();
+		System.out.println(c.toString());
+	}
+}
+
+```
+
+aST `	

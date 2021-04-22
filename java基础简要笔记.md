@@ -1256,4 +1256,324 @@ public class ExtendsTest {
 
 ```
 
-aST `	
+
+
+## 方法的重写
+
+1. 什么是方法的重写（override或overwrite）?
+
+   子类继承父类以后，可以对父类中同名同参数的方法，进行覆盖。
+
+2. 应用：
+
+   重写以后，当创建子类对象以后，通过子类对象调用子父类中的同名同参数的方法时，实际执行的是子类重写父类的方法。
+
+3. 举例
+
+   ```java 
+   class Circle{
+   public double findArea(){}//求面积
+   }
+   class Cylinder extends Circle{
+   public double findArea(){}//求表面积
+   }
+   ***************
+   class Account{
+   public boolean withdraw(double amt){}
+   }
+   class CheckAccount extends Account{
+   public boolean withdraw(double amt){}
+   }
+   ```
+
+4. 重写的规则：
+
+   方法的声明：权限修饰符 返回值类型 方法名(形参列表) throws 异常的类型{
+
+   //方法体
+
+   }
+
+   约定俗成：子类中的叫重写的方法，父类中的叫被重写的方法
+
+   * 子类重写的方法的方法名和形参列表与父类被重写的方法的方法名和形参列表相同
+
+   * 子类重写的方法的权限修饰符不小于父类被重写的方法的权限修饰符
+
+     > 特殊情况：子类不能重写父类中声明的private权限的方法
+
+   * 返回值类型
+
+     > * 父类被重写的方法的返回值类型是void，则子类重写的方法的返回值类型只能是void
+     > * 父类被重写的方法的返回值类型是A类型，则子类重写的方法的返回值类型可以是A类或A类的子类
+     > * 父类被重写的方法的返回值类型是基本数据类型(比如：double)，则子类重新写的方法的返回值类型必须是相同的基本数据类型(必须也是double)
+
+   * 子类重写的方法抛出的异常类型不大于父类被重写的方法抛出的异常类型(具体放到异常处理的时候详说)
+
+   * 考虑重写的时候子类和父类要么为非static的(要么都声明为static（不是重写）)
+
+5. 面试题
+
+   区分方法的重写和重载？
+
+   > 答：
+   > ① 二者的概念：
+   > ② 重载和重写的具体规则
+   > ③ 重载：不表现为多态性。
+   >   重写：表现为多态性。
+
+   重载，是指允许存在多个同名方法，而这些方法的参数不同。编译器根据方法不同的参数表，对同名方法的名称做修饰。对于编译器而言，这些同名方法就成了不同的方法。它们的调用地址在编译期就绑定了。Java的重载是可以包括父类和子类的，即子类可以重载父类的同名不同参数的方法。
+   所以：对于重载而言，在方法调用之前，编译器就已经确定了所要调用的方法，这称为“早绑定”或“静态绑定”；
+
+   而对于多态，只等到方法调用的那一刻，解释运行器才会确定所要调用的具体方法，这称为“晚绑定”或“动态绑定”。 
+
+   引用一句Bruce Eckel的话：“不要犯傻，如果它不是晚绑定，它就不是多态。”
+
+## 关键字：super
+
+1. super关键字可以理解为： 父类的
+
+2. 可以用来调用的结构：
+
+   属性、方法、构造器
+
+3. super 调用属性、方法：
+
+   * 可以再子类的方法或构造器中。通过使用“super.属性”或‘’super.方法‘’的方式，显示的调用父类中声明的属性或方法。但是，通常情况下，我们习惯省略‘’super.‘’
+   * 特殊情况：当==子类和父类中定义了同名的属== 时我们要想在子类中调用父类中声明的属性，则==必须==显式的使用"super.属性"的方式，表明调用的是父类中声明的属性。
+   * 特殊情况：当==子类重写了父类中的方法==以后，我们想在子类的方法中调用父类中被重写的方法时，则必须显式的使用"super.方法"的方式，表明调用的是父类中被重写的方法。
+
+4. super调用构造器：
+
+   * 我们可以在子类的构造器中显式的使用"super(形参列表)"的方式，调用父类中声明的指定的构造器
+   * "super(形参列表)"的使用，必须声明在子类构造器的首行！
+   * 我们在类的构造器中，针对于"this(形参列表)"或"super(形参列表)"只能二一，不能同时出现
+   * 在构造器的首行，没显式的声明"this(形参列表)"或"super(形参列表)"，则默认调用的是父类中空参的构造器：super()
+   * 在类的多个构造器中，至少一个类的构造器中使用了"super(形参列表)"，调用父类中的构造器
+
+## 子类对象实例化全过程
+
+1. 从结果上看：继承性
+
+   > 子类继承父类以后，就获取了父类中声明的属性或方法。
+   >
+   > 创建子类的对象，在堆空间中，就会加载所有父类中声明的属性。
+
+2. 从过程上看
+
+   > 当我们通过子类的构造器创建子类对象时，我们一定会直接或间接的调用其父类的构造器，进而调用父类的父类的构造器，...直到调用了java.lang.Object类中空参的构造器为止。正因为加载过所的父类的结构，所以才可以看到内存中父类中的结构，子类对象才可以考虑进行调用。
+
+   <a href="https://sm.ms/image/lcXE7WDJsj5n9dq" target="_blank"><img src="https://i.loli.net/2021/04/22/lcXE7WDJsj5n9dq.png" ></a>
+
+3. 强调说明：
+
+   ​		虽然创建子类对象时，调用了父类的构造器，但是自始至终就创建过一个对象，即为new的子类对象。
+
+   <a href="https://sm.ms/image/3TWnwE4ze9RcKxy" target="_blank"><img src="https://i.loli.net/2021/04/22/3TWnwE4ze9RcKxy.png" alt="image.png"></a>
+
+## 面向对象的特征三：多态性
+
+1. 多态性的理解：可以理解为一个事物的多种形态。
+
+2. 何为多态性：
+
+    对象的多态性(对象的上转型对象)：父类的引用指向子类的对象（或子类的对象赋给父类的引用）
+
+   > Person p=new Man();
+   >
+   > Object obj =new Date();
+
+3. 多态性的使用：虚拟方法调用
+
+   > 有了对象的多态性以后，我们在编译期，只能调用父类中声明的方法，但在运行期，我们实际执行的是子类重写父类的方法。
+
+   ==总结== ：编译，看左边；运行，看右边。
+
+4. 多态性的使用前提：
+
+   * 类的继承关系
+   * 方法的重写
+
+5. 多态性的应用举例：
+
+   ``` java
+   举例一：
+   	public void func(Animal animal){//Animal animal = new Dog();
+   		animal.eat();
+   		animal.shout();a
+   	}
+   举例二：
+   public void method(Object obj){
+   		
+   	}
+   举例三：
+   class Driver{
+   	
+   	public void doData(Connection conn){//conn = new MySQlConnection(); / conn = new OracleConnection();
+   		//规范的步骤去操作数据
+   //		conn.method1();
+   //		conn.method2();
+   //		conn.method3();
+   		
+   	}
+   	
+   }
+   ```
+
+6. 多态性使用的注意点：
+
+   对象的多态性，只适用于方法，不适用于属性（编译和运行都看左边）
+
+7. 关于向上转型与向下转型：
+
+   向上转型：多态
+
+   向下转型：
+
+   * 为什么使用向下转型：
+
+     > 有了对象的多态性以后，内存中实际上是加载了子类特有的属性和方法的，但是由于变量声明为父类类型，导致编译时，只能调用父类中声明的属性和方法。子类特有的属性和方法不能调用。如何才能调用子类特的属性和方法？使用向下转型。
+
+   * 如何实现向下转型：使用强制类型转换符：()
+
+   * 使用时的注意点：
+
+     > ① 使用强转时，可能出现ClassCastException的异常。
+     >
+     > ② 为了避免在向下转型时出现ClassCastException的异常，我们在向下转型之前，先进行instanceof的判断，一旦返回true，就进行向下转型。如果返回false，不进行向下转型。
+
+   * instanceof的使用：
+
+     > ① a instanceof A:判断对象a是否是类A的实例。如果是，返回true；如果不是，返回false。
+     >
+     > ② 如果 a instanceof A返回true,则 a instanceof B也返回true.其中，类B是类A的父类。
+     >
+     > ③ 要求a所属的类与类A必须是子类和父类的关系，否则编译错误。
+
+     图示：
+
+     <a href="https://sm.ms/image/Zn42gHTLxihzOqk" target="_blank"><img src="https://i.loli.net/2021/04/22/Zn42gHTLxihzOqk.png" ></a>
+
+8. 面试题
+
+   谈谈你对多态性的理解？
+
+   > ① 实现代码的通用性。
+   > ② Object类中定义的public boolean equals(Object obj){  }
+   >   JDBC:使用java程序操作(获取数据库连接、CRUD)数据库(MySQL、Oracle、DB2、SQL Server)
+   > ③ 抽象类、接口的使用肯定体现了多态性。（抽象类、接口不能实例化）
+
+   多态是编译时行为还是运行时行为？
+
+   ```java
+   import java.util.Random;
+   
+   //面试题：多态是编译时行为还是运行时行为？
+   //证明如下：
+   class Animal  {
+    
+   	protected void eat() {
+   		System.out.println("animal eat food");
+   	}
+   }
+   
+   class Cat  extends Animal  {
+    
+   	protected void eat() {
+   		System.out.println("cat eat fish");
+   	}
+   }
+   
+   class Dog  extends Animal  {
+    
+   	public void eat() {
+   		System.out.println("Dog eat bone");
+   
+   	}
+   
+   }
+   
+   class Sheep  extends Animal  {
+    
+   
+   	public void eat() {
+   		System.out.println("Sheep eat grass");
+   
+   	}
+   
+    
+   }
+   
+   public class InterviewTest {
+   
+   	public static Animal  getInstance(int key) {
+   		switch (key) {
+   		case 0:
+   			return new Cat ();
+   		case 1:
+   			return new Dog ();
+   		default:
+   			return new Sheep ();
+   		}
+   
+   	}
+   
+   	public static void main(String[] args) {
+   		int key = new Random().nextInt(3);
+   
+   		System.out.println(key);
+   
+   		Animal  animal = getInstance(key);
+   		
+   		animal.eat();
+   		 
+   	}
+   
+   }
+   
+   ```
+
+
+
+## Object类的使用
+
+1. java.lang.Object类的说明：
+
+   * Object类是所Java类的根父类
+
+   * 如果在类的声明中未使用extends关键字指明其父类，则默认父类为java.lang.Object类
+
+   * Object类中的功能(属性、方法)就具通用性。
+
+     > 属性：无
+     >
+     > 方法：equals() / toString() / getClass() /hashCode() / clone() / finalize()
+     >
+     > wait() 、 notify()、notifyAll()
+
+   * Object类只声明了一个空参的构造器
+
+   ### equals()方法
+
+   1. equals()的使用：
+
+      > 是一个方法，而非运算符
+      >
+      > 只能适用于引用数据类型
+      >
+      > Object类中equals()的定义：
+      >
+      > ```java 
+      > public boolean equals(Object obj) {
+      > 	        return (this == obj);
+      > 	  }
+      > ```
+      >
+      > 说明：==Object类中定义的equals()和\==的作用是相同的==：比较两个对象的地址值是否相同.即两个引用是否指向同一个对象实体
+
+   2. 像String、Date、File、包装类等都重写了Object类中的equals()方法。重写以后，比较的不是两个引用的地址是否相同，==而是比较两个对象的"实体内容"是否相同==。
+
+   3. 通常情况下，我们自定义的类如果使用equals()的话，也通常是比较两个对象的"实体内容"是否相同。那么，我们就需要对Object类中的equals()进行重写。
+
+      ==重写的原则：比较两个对象的实体内容是否相同==
+

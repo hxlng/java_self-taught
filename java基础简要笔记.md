@@ -704,7 +704,7 @@ int[] arr = new int[]{43,32,76,-98,0,64,33,-21,32,99};
 小知识：一旦程序出现异常，未处理时，就终止执行。
 ```
 
-# 五、面向对象
+# 五、面向对象上
 
 ## 类与对象
 
@@ -1553,7 +1553,7 @@ public class ExtendsTest {
 
    * Object类只声明了一个空参的构造器
 
-   ### equals()方法
+   ###  equals方法
 
    1. equals()的使用：
 
@@ -1576,4 +1576,644 @@ public class ExtendsTest {
    3. 通常情况下，我们自定义的类如果使用equals()的话，也通常是比较两个对象的"实体内容"是否相同。那么，我们就需要对Object类中的equals()进行重写。
 
       ==重写的原则：比较两个对象的实体内容是否相同==
+      
+   4. 重写equals()
+   
+      * 手动重写  举例
+   
+        ```java
+        class User{
+            String name;
+            int age;
+            //重写其equals()方法
+            public boolean equals(Object obj){
+                if(obj==this){
+                    return true;
+                }
+                if(obj instanceof User){
+                    User u=(User)obj;
+                    return this.age==u.age&&this.name.equals(u.name);
+                }
+                return false;
+            }
+        }
+        ```
+   
+      * 开发中如何实现：自动生成的
+   
+        ```java
+        public class User {
+        	String name;
+            int age;
+        	
+        	@Override
+        	public boolean equals(Object obj) {
+        		if (this == obj)
+        			return true;
+        		if (obj == null)
+        			return false;
+        		if (getClass() != obj.getClass())
+        			return false;
+        		User other = (User) obj;
+        		if (age != other.age)
+        			return false;
+        		if (name == null) {
+        			if (other.name != null)
+        				return false;
+        		} else if (!name.equals(other.name))
+        			return false;
+        		return true;
+        	}
+            
+        }
+        ```
+   
+   5. 回顾==运算符的使用：
+   
+      > == ：运算符
+      >
+      > 1. 可以使用在基本数据类型变量和引用数据类型变量中
+      > 2. 如果比较的是基本数据类型变量：比较两个变量保存的数据是否相等。（不一定类型要相同）
+      > 3. 如果比较的是引用数据类型变量：比较两个对象的地址值是否相同.即两个引用是否指向同一个对象实体
+      > 4. == 符号使用时，必须保证符号左右两边的变量类型一致。
+   
+      
+
+### toString()方法
+
+1. toString（）的使用：
+
+  * 当我们输出一个对象的引用时，实际上就是调用当前对象的toString（）
+  
+  * Object类中toString()的定义：
+  
+    ```java
+    public String toString(){
+        return getClass().getName()+"@"+Integer.toHexString(hashCode());
+    }
+    ```
+    
+  * 像String、Date、File、包装类等都重写了Object类中的toString()方法。使得在调用对象的toString()时，返回"实体内容"信息
+  
+  * 自定义类也可以重写toString()方法，当调用此方法时，返回对象的"实体内容"
+  
+    > //自动实现
+    > 	@Override
+    > 	public String toString() {
+    > 		return "Customer [name=" + name + ", age=" + age + "]";
+    > 	}
+  
+2. 面试题：
+
+   ① final、finally、finalize的区别？
+   ②  == 和 equals() 区别
+
+   后面补此题
+
+## 单元测试方法
+
+步骤
+
+1. 中当前工程 - 右键择：build path - add libraries - JUnit 4 - 下一步
+
+2. 创建Java类，进行单元测试。
+
+   此时的Java类要求：==① 此类是public的  ②此类提供公共的无参的构造器==
+
+3. 此类中声明单元测试方法。
+
+   此时的单元测试方法：==方法的权限是public,没返回值，没形参==
+
+4. 此单元测试方法上需要声明注解：@Test,并在单元测试类中导入：import org.junit.Test;
+
+5. 声明好单元测试方法以后，就可以在方法体内测试相关的代码。
+
+6. 写完代码以后，左键双击单元测试方法名选中，右键：run as - JUnit Test
+
+   说明
+
+   1.如果执行结果没任何异常：绿条
+
+   2.如果执行结果出现异常：红条
+
+   ```java
+   import org.junit.Test;
+   public class Junit {
+   	@Test
+   	public void testToString(){
+   		String s2 = "MM";
+   		System.out.println(s2.toString());
+   	}
+   }
+   ```
+
+   
+
+## 包装类的使用
+
+1. 为什么要有包装类(或封装类）
+
+   为了使基本数据类型的变量具有类的特征，引入包装类。
+
+2. 基本数据类型与对应的包装类：
+   <a href="https://sm.ms/image/xoKQNE2h4Lt9i3r" target="_blank"><img src="https://i.loli.net/2021/04/23/xoKQNE2h4Lt9i3r.png" ></a>
+
+3. 需要掌握的类型间的转换：（基本数据类型、包装类、String）
+
+   <a href="https://sm.ms/image/PpzTaUG81wIifrF" target="_blank"><img src="https://i.loli.net/2021/04/23/PpzTaUG81wIifrF.png" ></a>
+
+4. 简易版
+
+   基本数据类型<--->包装类：JDK 5.0 新特性：自动装箱 与自动拆箱
+
+   基本数据类型、包装类--->String:调用String重载的valueOf(Xxx xxx)
+
+   String--->基本数据类型、包装类:调用包装类的parseXxx(String s)
+
+   ​	注意：转换时，可能会报NumberFormatException
+
+   应用场景举例：
+
+   ① Vector类中关于添加元素，只定义了形参为Object类型的方法：
+
+   v.addElement(Object obj);   //基本数据类型 --->包装类 --->使用多态
+
+   ```java
+   import org.junit.Test;
+   
+   /*
+    * 包装类的使用:
+    * 1.java提供了8种基本数据类型对应的包装类，使得基本数据类型的变量具有类的特征
+    * 
+    * 2.掌握的：基本数据类型、包装类、String三者之间的相互转换
+    * 
+    * 
+    * 
+    */
+   public class WrapperTest {
+   	
+   	//String类型 --->基本数据类型、包装类：调用包装类的parseXxx(String s)
+   	@Test
+   	public void test5(){
+   		String str1 = "123";
+   		//错误的情况：
+   //		int num1 = (int)str1;
+   //		Integer in1 = (Integer)str1;
+   		//可能会报NumberFormatException
+   		int num2 = Integer.parseInt(str1);
+   		System.out.println(num2 + 1);
+   		
+   		String str2 = "true1";
+   		boolean b1 = Boolean.parseBoolean(str2);
+   		System.out.println(b1);
+   	}
+   	
+   	//基本数据类型、包装类--->String类型：调用String重载的valueOf(Xxx xxx)
+   	@Test
+   	public void test4(){
+   		
+   		int num1 = 10;
+   		//方式1：连接运算
+   		String str1 = num1 + "";
+   		//方式2：调用String的valueOf(Xxx xxx)
+   		float f1 = 12.3f;
+   		String str2 = String.valueOf(f1);//"12.3"
+   		
+   		Double d1 = new Double(12.4);
+   		String str3 = String.valueOf(d1);
+   		System.out.println(str2);
+   		System.out.println(str3);//"12.4"
+   		
+   	}
+   	
+   	/*
+   	 * JDK 5.0 新特性：自动装箱 与自动拆箱
+   	 */
+   	@Test
+   	public void test3(){
+   //		int num1 = 10;
+   //		//基本数据类型-->包装类的对象
+   //		method(num1);
+   		
+   		//自动装箱：基本数据类型 --->包装类
+   		int num2 = 10;
+   		Integer in1 = num2;//自动装箱
+   		
+   		boolean b1 = true;
+   		Boolean b2 = b1;//自动装箱
+   		
+   		//自动拆箱：包装类--->基本数据类型
+   		System.out.println(in1.toString());
+   		
+   		int num3 = in1;//自动拆箱
+   		
+   	}
+   	
+   	public void method(Object obj){
+   		System.out.println(obj);
+   	}
+   	
+   	//包装类--->基本数据类型:调用包装类Xxx的xxxValue()
+   	@Test
+   	public void test2(){
+   		Integer in1 = new Integer(12);
+   		
+   		int i1 = in1.intValue();
+   		System.out.println(i1 + 1);
+   		
+   		
+   		Float f1 = new Float(12.3);
+   		float f2 = f1.floatValue();
+   		System.out.println(f2 + 1);
+   	}
+   	
+   	//基本数据类型 --->包装类：调用包装类的构造器
+   	@Test
+   	public void test1(){
+   		
+   		int num1 = 10;
+   	//	System.out.println(num1.toString());
+   		Integer in1 = new Integer(num1);
+   		System.out.println(in1.toString());
+   		
+   		Integer in2 = new Integer("123");
+   		System.out.println(in2.toString());
+   		
+   		//报异常
+   //		Integer in3 = new Integer("123abc");
+   //		System.out.println(in3.toString());
+   		
+   		Float f1 = new Float(12.3f);
+   		Float f2 = new Float("12.3");
+   		System.out.println(f1);
+   		System.out.println(f2);
+   		
+   		Boolean b1 = new Boolean(true);
+   		Boolean b2 = new Boolean("TrUe");
+   		System.out.println(b2);
+   		Boolean b3 = new Boolean("true123");
+   		System.out.println(b3);//false
+   		
+   		
+   		Order order = new Order();
+   		System.out.println(order.isMale);//false
+   		System.out.println(order.isFemale);//null
+   	}
+   	
+   }
+   
+   class Order{
+   	
+   	boolean isMale;
+   	Boolean isFemale;
+   }
+   ```
+
+   举例
+
+   ```java
+   import java.util.Scanner;
+   import java.util.Vector;
+   
+   /*
+    *  利用Vector代替数组处理：从键盘读入学生成绩（以负数代表输入结束），找出最高分，并输出学生成绩等级。
+   	提示：数组一旦创建，长度就固定不变，所以在创建数组前就需要知道它的长度。
+   	而向量类java.util.Vector可以根据需要动态伸缩。
+   	
+   	创建Vector对象：Vector v=new Vector();
+   	给向量添加元素：v.addElement(Object obj);   //obj必须是对象
+   	取出向量中的元素：Object  obj=v.elementAt(0);
+   	注意第一个元素的下标是0，返回值是Object类型的。
+   	计算向量的长度：v.size();
+   	若与最高分相差10分内：A等；20分内：B等；
+   	      30分内：C等；其它：D等
+   
+    * 
+    * 
+    * 
+    * 
+    */
+   public class ScoreTest {
+   	public static void main(String[] args) {
+   		//1.实例化Scanner，用于从键盘获取学生成绩
+   		Scanner scan = new Scanner(System.in);
+   		
+   		//2.创建Vector对象：Vector v=new Vector();相当于原来的数组
+   		Vector v = new Vector();
+   		
+   		//3.通过for(;;)或while(true)方式，给Vector中添加数组
+   		int maxScore = 0;
+   		for(;;){
+   			System.out.println("请输入学生成绩（以负数代表输入结束）");
+   			int score = scan.nextInt();
+   			//3.2 当输入是负数时，跳出循环
+   			if(score < 0){
+   				break;
+   			}
+   			if(score > 100){
+   				System.out.println("输入的数据非法，请重新输入");
+   				continue;
+   			}
+   			//3.1 添加操作：：v.addElement(Object obj)
+   			//jdk5.0之前：
+   //			Integer inScore = new Integer(score);
+   //			v.addElement(inScore);//多态
+   			//jdk5.0之后：
+   			v.addElement(score);//自动装箱
+   			//4.获取学生成绩的最大值
+   			if(maxScore < score){
+   				maxScore = score;
+   			}
+   		}
+   		
+   		//5.遍历Vector，得到每个学生的成绩，并与最大成绩比较，得到每个学生的等级。
+   		char level;
+   		for(int i = 0;i < v.size();i++){
+   			Object obj = v.elementAt(i);
+   			//jdk 5.0之前：
+   //			Integer inScore = (Integer)obj;
+   //			int score = inScore.intValue();
+   			//jdk 5.0之后：
+   			int score = (int)obj;
+   			
+   			if(maxScore - score <= 10){
+   				level = 'A';
+   			}else if(maxScore - score <= 20){
+   				level = 'B';
+   			}else if(maxScore - score <= 30){
+   				level = 'C';
+   			}else{
+   				level = 'D';
+   			}
+   			
+   			System.out.println("student-" + i + " score is " + score + ",level is " + level);
+   			
+   		}
+   		
+   		
+   		
+   		
+   	}
+   }
+   ```
+
+   
+
+# 六、面向对象下
+
+## 关键字：static
+
+1. 可以用来修饰的结构：主要用来修饰类的内部结构
+
+   属性、方法、代码块、内部类
+
+2. static修饰属性：静态变量（或类变量）
+
+   * 属性，是否使用static修饰，又分为：静态属性  vs 非静态属性(实例变量)
+
+     实例变量：我们创建了类的多个对象，每个对象都独立的拥一套类中的非静态属性。当修改其中一个对象中的非静态属性时，不会导致其他对象中同样的属性值的修改。
+
+     静态变量：我们创建了类的多个对象，多个对象共享同一个静态变量。当通过某一个对象修改静态变量时，会导致其他对象调用此静态变量时，是修改过了的。
+
+   * static修饰属性的其他说明：
+
+     ① 静态变量随着类的加载而加载。可以通过"类.静态变量"的方式进行调用
+
+     ② 静态变量的加载要早于对象的创建。
+
+     ③ 由于类只会加载一次，则静态变量在内存中也只会存在一份：存在方法区的静态域中。
+
+     > ​		类变量	实例变量
+     >
+     > 类		yes		no
+     >
+     > 对象	yes		yes
+
+   * 静态属性举例：System.out; Math.PI;
+
+3. 静态变量内存解析：
+
+   <a href="https://sm.ms/image/cjeO1Msq9NaF8I3" target="_blank"><img src="https://i.loli.net/2021/04/23/cjeO1Msq9NaF8I3.png" ></a>
+
+4. static修饰方法：静态方法(类方法)
+
+   * 随着类的加载而加载，可以通过"类.静态方法"的方式进行调用
+
+     > ​			静态方法	非静态方法
+     >
+     > 类		    yes		  no
+     >
+     > 对象		yes		  yes
+
+   * ==静态方法中，只能调用静态的方法或属性==
+
+   * ==非静态方法中，既可以调用非静态的方法或属性，也可以调用静态的方法或属性==
+
+5. static的注意点：
+
+   * 在静态的方法内，不能使用this关键字、super关键字
+   * 关于静态属性和静态方法的使用，从生命周期的角度去理解。
+
+6. 如何判定属性和方法应该使用static关键字：
+
+   * 关于属性
+     * 属性是可以被多个对象所共享的，不会随着对象的不同而不同的。
+     * 类中的常量也常常声明为static
+   * 关于方法
+     * 操作静态属性的方法，通常设置为static的
+     * 工具类中的方法，习惯上声明为static的。 比如：Math、Arrays、Collections
+
+   举例
+
+   ```java
+   //static关键字的应用
+   public class CircleTest {
+   	public static void main(String[] args) {
+   		
+   		Circle c1 = new Circle();
+   		
+   		Circle c2 = new Circle();
+   		
+   		Circle c3 = new Circle(3.4);
+   		System.out.println("c1的id：" + c1.getId() );
+   		System.out.println("c2的id：" + c2.getId() );
+   		System.out.println("c3的id：" + c3.getId() );
+   		
+   		System.out.println("创建的圆的个数为：" + Circle.getTotal());
+   		
+   	}
+   }
+   
+   
+   class Circle{
+   	
+   	private double radius;
+   	private int id;//自动赋值
+   	
+   	public Circle(){
+   		id = init++;
+   		total++;
+   	}
+   	
+   	public Circle(double radius){
+   		this();
+   //		id = init++;
+   //		total++;
+   		this.radius = radius;
+   		
+   	}
+   	
+   	private static int total;//记录创建的圆的个数
+   	private static int init = 1001;//static声明的属性被所有对象所共享
+   	
+   	public double findArea(){
+   		return 3.14 * radius * radius;
+   	}
+   
+   	public double getRadius() {
+   		return radius;
+   	}
+   
+   	public void setRadius(double radius) {
+   		this.radius = radius;
+   	}
+   
+   	public int getId() {
+   		return id;
+   	}
+   
+   	public static int getTotal() {
+   		return total;
+   	}
+   
+   }
+   ```
+
+
+
+## 单例模式
+
+1. 设计模式的说明
+
+   设计模式是在大量的实践中总结和理论化之后优的代码结构、编程风格、以及解决问题的思考方式。
+
+2. 常用设计模式   --- 23种经典的设计模式  GOF
+
+   创建型模式，共5种：工厂方法模式、抽象工厂模式、单例模式、建造者模式、原型模式。 
+   结构型模式，共7种：适配器模式、装饰器模式、代理模式、外观模式、桥接模式、组合模式、享元模式。 
+   行为型模式，共11种：策略模式、模板方法模式、观察者模式、迭代器模式、责任链模式、命令模式、备忘录模式、状态模式、访问者模式、中介者模式、解释器模式。 
+
+3. 单例模式
+
+   * 要解决的问题：
+
+     ==所谓类的单例设计模式，就是采取一定的方法保证在整个的软件系统中，对某个类只能存在一个对象实例。==
+
+   * 具体代码的实现
+
+     饿汉式1：
+
+     ```java
+     class Bank(){
+         //1、私化类的构造器
+         private Bank(){
+             
+         }
+         //2、内部创建类的对象
+         //4、要求此对象也必须声明为静态的
+         private static Bank instance= new Bank();
+         //3、提供公共的静态方法，返回类的对象
+         public static Bank getInstance(){
+             return instance;
+         }
+     }
+     ```
+
+     饿汉式2：使用了静态代码块
+
+     ```java 
+     class Order{
+         //1.私化类的构造器
+     	private Order(){
+     		
+     	}
+         //2.声明当前类对象，没初始化
+     	//4.此对象也必须声明为static的
+     	private static Order instance = null;
+         static{
+     		instance = new Order();
+      }
+         //3.声明public、static的返回当前类对象的方法
+     	public static Order getInstance(){
+     		return instance;
+     	}
+     }
+     ```
+
+     懒汉式：
+
+     ```java
+     class Order{
+         //1.私化类的构造器
+     	private Order(){
+     		
+     	}
+         //2.声明当前类对象，没初始化
+     	//4.此对象也必须声明为static的
+     	private static Order instance = null;
+         //3.声明public、static的返回当前类对象的方法
+     	public static Order getInstance(){
+     		
+     		if(instance == null){
+     			
+     			instance = new Order();
+     			
+     		}
+     		return instance;
+     	}
+     }
+     ```
+
+4. 两种方式的对比
+
+   饿汉式：
+
+   * 坏处：对象加载时间过长
+   * 好处：饿汉式是线程安全的
+
+   懒汉式：
+
+   * 好处：延迟对象的创建。
+
+   * 坏处：目前的写法线程不安全。--->到多线程内容时，在修改
+
+     
+
+## main()的使用说明
+
+* main()方法作为程序的入口
+
+* main()方法也是一个普通的静态方法
+
+* main()方法可以作为我们与控制台交互的方式。（之前：使用Scanner）
+
+  > 如何将控制台获取的数据传给形参：String[] args?
+  >   运行时：java 类名 "Tom" "Jerry" "123" "true"
+  >
+  > sysout(args[0]);//"Tom"
+  > sysout(args[3]);//"true"  -->Boolean.parseBoolean(args[3]);
+  > sysout(args[4]);//报异常
+
+
+
+小结：
+
+> public static void main(String[] args){//方法体}
+>
+> 权限修饰符：private 缺省 protected pubilc ---->封装性
+> 修饰符：static \ final \ abstract \native 可以用来修饰方法
+> 返回值类型： 无返回值 / 有返回值 -->return
+> 方法名：需要满足标识符命名的规则、规范；"见名知意"
+> 形参列表：重载 vs 重写；参数的值传递机制；体现对象的多态性
+> 方法体：来体现方法的功能
 

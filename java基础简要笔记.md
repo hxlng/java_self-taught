@@ -2217,3 +2217,253 @@ public class ExtendsTest {
 > 形参列表：重载 vs 重写；参数的值传递机制；体现对象的多态性
 > 方法体：来体现方法的功能
 
+## 类的结构之四：代码块
+
+代码块(初始化块)（重要性较属性、方法、构造器差一些）
+
+1. 代码块的作用：用来初始化类、对象的信息
+
+2. 分类：代码块要是使用修饰符，只能使用static     静态代码块  vs 非静态代码块
+
+3. 静态代码块：
+
+   >内部可以输出语句
+   >随着类的加载而执行,而且只执行一次
+   >作用：初始化类的信息
+   >如果一个类中定义了多个静态代码块，则按照声明的先后顺序执行
+   >静态代码块的执行要优先于非静态代码块的执行
+   >静态代码块内只能调用静态的属性、静态的方法，不能调用非静态的结构
+
+4. 非静态代码块：
+
+   >内部可以输出语句
+   >随着对象的创建而执行
+   >每创建一个对象，就执行一次非静态代码块
+   >作用：可以在创建对象时，对对象的属性等进行初始化
+   >如果一个类中定义了多个非静态代码块，则按照声明的先后顺序执行
+   >非静态代码块内可以调用静态的属性、静态的方法，或非静态的属性、非静态的方法
+
+5. 举例
+
+   LeafTest.java
+
+   ```java
+   //总结：由父及子，静态先行
+   class Root{
+   	static{
+   		System.out.println("Root的静态初始化块");
+   	}
+   	{
+   		System.out.println("Root的普通初始化块");
+   	}
+   	public Root(){
+   		super();
+   		System.out.println("Root的无参数的构造器");
+   	}
+   }
+   class Mid extends Root{
+   	static{
+   		System.out.println("Mid的静态初始化块");
+   	}
+   	{
+   		System.out.println("Mid的普通初始化块");
+   	}
+   	public Mid(){
+   		super();
+   		System.out.println("Mid的无参数的构造器");
+   	}
+   	public Mid(String msg){
+   		//通过this调用同一类中重载的构造器
+   		this();
+   		System.out.println("Mid的带参数构造器，其参数值："
+   			+ msg);
+   	}
+   }
+   class Leaf extends Mid{
+   	static{
+   		System.out.println("Leaf的静态初始化块");
+   	}
+   	{
+   		System.out.println("Leaf的普通初始化块");
+   	}	
+   	public Leaf(){
+   		//通过super调用父类中有一个字符串参数的构造器
+   		super("atguigu");
+   		System.out.println("Leaf的构造器");
+   	}
+   }
+   public class LeafTest{
+   	public static void main(String[] args){
+   		new Leaf(); 
+   		System.out.println();
+   		new Leaf();
+   	}
+   }
+   ```
+
+   Son.java
+
+   ```java
+   class Father {
+   	static {
+   		System.out.println("11111111111");
+   	}
+   	{
+   		System.out.println("22222222222");
+   	}
+   
+   	public Father() {
+   		System.out.println("33333333333");
+   
+   	}
+   
+   }
+   
+   public class Son extends Father {
+   	static {
+   		System.out.println("44444444444");
+   	}
+   	{
+   		System.out.println("55555555555");
+   	}
+   	public Son() {
+   		System.out.println("66666666666");
+   	}
+   
+   
+   	public static void main(String[] args) { // 由父及子 静态先行
+   		System.out.println("77777777777");
+   		System.out.println("************************");
+   		new Son();
+   		System.out.println("************************");
+   		new Son();
+   		System.out.println("************************");
+   		new Father();
+   	}
+   
+   }
+   ```
+
+
+
+## 属性的赋值顺序
+
+ * ①默认初始化
+ * ②显式初始化/⑤在代码块中赋值
+ * ③构造器中初始化
+ * ④有了对象以后，可以通过"对象.属性"或"对象.方法"的方式，进行赋值
+ * 执行的先后顺序：① - ② / ⑤ - ③ - ④
+
+## 关键字： final
+
+final：最终的
+
+1. 可以用来修饰：类、方法、变量
+
+2. final 用来修饰一个类:此类不能被其他类所继承。
+
+   比如：String类、System类、StringBuffer类
+
+3. final 用来修饰方法：表明此方法不可以被重写
+
+   比如：Object类中getClass();
+
+4. final 用来修饰变量：此时的"变量"就称为是一个常量
+
+   * final修饰属性：可以考虑赋值的位置：显式初始化、代码块中初始化、构造器中初始化
+
+   * final修饰局部变量：
+
+     > 尤其是使用final修饰形参时，表明此形参是一个常量。当我们调用此方法时，给常量形参赋一个实参。一旦赋值以后，就只能在方法体内使用此形参，但不能进行重新赋值。
+
+5. static final 用来修饰属性：全局常量
+
+6. 举例
+
+   ```java
+   public class FinalTest {
+   	
+   	final int WIDTH = 0;
+   	final int LEFT;
+   	final int RIGHT;
+   //	final int DOWN;
+   	
+   	{
+   		LEFT = 1;
+   	}
+   	
+   	public FinalTest(){
+   		RIGHT = 2;
+   	}
+   	
+   	public FinalTest(int n){
+   		RIGHT = n;
+   	}
+   	
+   //	public void setDown(int down){
+   //		this.DOWN = down;
+   //	}
+   	
+   	
+   	public void doWidth(){
+   //		width = 20;
+   	}
+   	
+   	
+   	public void show(){
+   		final int NUM = 10;//常量
+   //		NUM += 20;
+   	}
+   	
+   	public void show(final int num){
+   //		num = 20;//编译不通过
+   		System.out.println(num);
+   	}
+   	
+   	
+   	public static void main(String[] args) {
+   		
+   		int num = 10;
+   		
+   		num = num + 5;
+   		
+   		FinalTest test = new FinalTest();
+   //		test.setDown(3);
+   		
+   		test.show(10);
+   	}
+   }
+   
+   
+   final class FinalA{
+   	
+   }
+   
+   //class B extends FinalA{
+   //	
+   //}
+   
+   //class C extends String{
+   //	
+   //}
+   
+   class AA{
+   	public final void show(){
+   		
+   	}
+   }
+   
+   class BB extends AA{
+   	
+   //	public void show(){
+   //		
+   //	}
+   }
+   ```
+
+   
+
+
+
+
+

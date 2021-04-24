@@ -2461,9 +2461,383 @@ final：最终的
    }
    ```
 
+
+## 关键字:abstract
+
+1. 可以用来修饰：类、方法
+
+2. 具体的：
+
+   * abstract修饰类：抽象类
+
+     > ==此类不能实例化==
+     >
+     > ==抽象类中一定有构造器==，便于子类实例化时调用（涉及：子类对象实例化的全过程）
+     >
+     > 开发中，都会提供抽象类的子类，让子类对象实例化，完成相关的操作 --->抽象的使用前提：继承性
+
+   * abstract修饰方法：抽象方法
+
+     > 抽象方法只方法的声明，没方法体
+     >
+     > 包含抽象方法的类，一定是一个抽象类。反之，抽象类中可以没有抽象方法的。
+     >
+     > 若子类重写了父类中的所的抽象方法后，此子类方可实例化
+     >
+     > 若子类没重写父类中的所的抽象方法，则此子类也是一个抽象类，需要使用abstract修饰
+
+3. 注意点：
+
+   1. abstract不能用来修饰：属性、构造器等结构
+   2. abstract不能用来修饰私方法、静态方法、final的方法、final的类
+
+4. abstract的应用举例
+
+   举例一：
+
+   ```java
+   public abstract class Vehicle{
+       public abstract double calcFuelEfficiency();//计算燃料效率的抽象方法
+       public abstract double calcTripDistance();//计算行驶距离的抽象方法
+   }
+   public class Truck extends Vehicle{
+   	public double calcFuelEfficiency( ){//写出计算卡车的燃料效率的具体方法}
+   	public double calcTripDistance() { //写出计算卡车行驶距离的具体方法}
+   }
+   public class RiverBarge extends vehicle{
+   	public double calcFuelEfficiency(){//写出计算驳船的燃料效率的具体方法}
+       public double calcTripDistance( ) {//写出计算驳船行驶距离的具体方法}
+       
+   }
+   ```
+
+   举例二：
+
+   ```java
+   abstract class GeometricObject{
+   public abstract double findArea();
+   }
+   class Circle extends GeometricObject{
+   private double radius;
+   public double findArea(){
+   		return 3.14 * radius * radius;
+   }
+   }
+   ```
+
+   举例三：
+
+   > IO流中设计到的抽象类：InputStream/OutputStream / Reader /Writer。在其内部
+   > 定义了抽象的read()、write()方法。
+
+
+
+### 模板方法的设计模式
+
+1. 解决的问题
+
+   在软件开发中实现一个算法时，整体步骤很固定、通用，这些步骤已经在父类中写好了。但是些部分易变，易变部分可以抽象出来，供不同子类实现。这就是一种模板模式。
+
+2. 应用场景
+
+   > 模板方法设计模式是编程中经常用得到的模式。各个框架、类库中都有他的影子，比如常见的有:
+   > 数据库访问的封装Junit单元测试
+   > JavaWeb的Servlet中关于doGetldoPost方法调用
+   >
+   > Hibernate中模板程序
+   > Spring中JDBCTemlate、HibernateTemplate等
+
+3. 举例
+
+   ```java 
+   /*
+    * 抽象类的应用：模板方法的设计模式
+    * 
+    */
+   public class TemplateTest {
+       public static void main(String[] args) {
    
+           SubTemplate t = new SubTemplate();
+   
+           t.spendTime();
+       }
+   }
+   
+   abstract class Template{
+   
+       //计算某段代码执行所需要花费的时间
+       public void spendTime(){
+   
+           long start = System.currentTimeMillis();
+   
+           this.code();//不确定的部分、易变的部分
+   
+           long end = System.currentTimeMillis();
+   
+           System.out.println("花费的时间为：" + (end - start));
+   
+       }
+   
+       public abstract void code();
+   
+   
+   }
+   
+   class SubTemplate extends Template{
+   
+       @Override
+       public void code() {
+   
+           for(int i = 2;i <= 1000;i++){
+               boolean isFlag = true;
+               for(int j = 2;j <= Math.sqrt(i);j++){
+   
+                   if(i % j == 0){
+                       isFlag = false;
+                       break;
+                   }
+               }
+               if(isFlag){
+                   System.out.println(i);
+               }
+           }
+   
+       }
+   
+   }
+   ```
+
+   ```java
+   //抽象类的应用：模板方法的设计模式
+   public class TemplateMethodTest {
+   
+   	public static void main(String[] args) {
+   		BankTemplateMethod btm = new DrawMoney();
+   		btm.process();
+   
+   		BankTemplateMethod btm2 = new ManageMoney();
+   		btm2.process();
+   	}
+   }
+   abstract class BankTemplateMethod {
+   	// 具体方法
+   	public void takeNumber() {
+   		System.out.println("取号排队");
+   	}
+   
+   	public abstract void transact(); // 办理具体的业务 //钩子方法
+   
+   	public void evaluate() {
+   		System.out.println("反馈评分");
+   	}
+   
+   	// 模板方法，把基本操作组合到一起，子类一般不能重写
+   	public final void process() {
+   		this.takeNumber();
+   
+   		this.transact();// 像个钩子，具体执行时，挂哪个子类，就执行哪个子类的实现代码
+   
+   		this.evaluate();
+   	}
+   }
+   
+   class DrawMoney extends BankTemplateMethod {
+   	public void transact() {
+   		System.out.println("我要取款！！！");
+   	}
+   }
+   
+   class ManageMoney extends BankTemplateMethod {
+   	public void transact() {
+   		System.out.println("我要理财！我这里有2000万美元!!");
+   	}
+   }
+   ```
+
+## 关键字:interface
+
+1. 使用说明：
+
+* 接口使用interface来定义
+* Java中，接口和类是并列的两个结构
+
+2. 如何定义接口：定义接口中的成员
+
+   * JDK7及以前：只能定义全局常量和抽象方法
+
+     > 全局常量：public static final的.但是书写时，可以省略不写
+     >
+     > 抽象方法：public abstract的
+
+   * JDK8：除了定义全局常量和抽象方法之外，还可以定义静态方法、默认方法（略
+
+3. 接口中不能定义构造器的！意味着接口不可以实例化
+
+4. Java开发中，接口通过让类去实现(implements)的方式来使用.
+
+   1. 如果实现类覆盖了接口中的所抽象方法，则此实现类就可以实例化
+   2. 如果实现类没覆盖接口中所的抽象方法，则此实现类仍为一个抽象类
+
+5. Java类可以实现多个接口   --->弥补了Java单继承性的局限性
+
+   1. 格式：class AA extends BB implements CC,DD,EE
+
+6. 接口与接口之间可以继承，而且可以多继承
+
+7. 接口的具体使用，体现多态性
+
+8. 接口，实际上可以看做是一种规范
+
+9. 举例
+
+   ```java 
+   /*
+    * 接口的使用
+    * 1.接口使用上也满足多态性
+    * 2.接口，实际上就是定义了一种规范
+    * 3.开发中，体会面向接口编程！
+    * 
+    */
+   public class USBTest {
+   	public static void main(String[] args) {
+   		
+   		Computer com = new Computer();
+   		//1.创建了接口的非匿名实现类的非匿名对象
+   		Flash flash = new Flash();
+   		com.transferData(flash);
+   		
+   		//2. 创建了接口的非匿名实现类的匿名对象
+   		com.transferData(new Printer());
+   		
+   		//3. 创建了接口的匿名实现类的非匿名对象
+   		USB phone = new USB(){
+   
+   			@Override
+   			public void start() {
+   				System.out.println("手机开始工作");
+   			}
+   
+   			@Override
+   			public void stop() {
+   				System.out.println("手机结束工作");
+   			}
+   			
+   		};
+   		com.transferData(phone);
+   		
+   		
+   		//4. 创建了接口的匿名实现类的匿名对象
+   		
+   		com.transferData(new USB(){
+   			@Override
+   			public void start() {
+   				System.out.println("mp3开始工作");
+   			}
+   
+   			@Override
+   			public void stop() {
+   				System.out.println("mp3结束工作");
+   			}
+   		});
+   	}
+   }
+   
+   class Computer{
+   	
+   	public void transferData(USB usb){//USB usb = new Flash();
+   		usb.start();
+   		
+   		System.out.println("具体传输数据的细节");
+   		
+   		usb.stop();
+   	}
+   	
+   	
+   }
+   
+   interface USB{
+   	//常量：定义了长、宽、最大最小的传输速度等
+   	
+   	void start();
+   	
+   	void stop();
+   	
+   }
+   
+   class Flash implements USB{
+   
+   	@Override
+   	public void start() {
+   		System.out.println("U盘开启工作");
+   	}
+   
+   	@Override
+   	public void stop() {
+   		System.out.println("U盘结束工作");
+   	}
+   	
+   }
+   
+   class Printer implements USB{
+   	@Override
+   	public void start() {
+   		System.out.println("打印机开启工作");
+   	}
+   
+   	@Override
+   	public void stop() {
+   		System.out.println("打印机结束工作");
+   	}
+   	
+   }
+   ```
+
+10. 体会面向接口编程的
+
+    <a href="https://sm.ms/image/FRasN36prtUjbzZ" target="_blank"><img src="https://i.loli.net/2021/04/24/FRasN36prtUjbzZ.png" ></a>
+
+    面向接口编程：我们在应用程序中，调用的结构都是JDBC中定义的接口，不会出现具体某一个
+    数据库厂商的API。
+
+11. Java8中关于接口的新规范
+
+    1. 接口中定义的静态方法，只能通过接口来调用。
+
+    2. 通过实现类的对象，可以调用接口中的默认方法。
+
+       如果实现类重写了接口中的默认方法，调用时，仍然调用的是重写以后的方法
+
+    3. 如果子类(或实现类)继承的父类和实现的接口中声明了同名同参数的默认方法，那么子类在没重写此方法的情况下，默认调用的是父类中的同名同参数的方法。-->==类优先原则==
+
+    4. 如果实现类实现了多个接口，而这多个接口中定义了同名同参数的默认方法，那么在实现类没重写此方法的情况下，报错。-->接口冲突。这就需要我们必须在实现类中重写此方法
+
+    5. 如何在子类(或实现类)的方法中调用父类、接口中被重写的方法
+
+       > public void myMethod(){
+       > 		method3();//调用自己定义的重写的方法
+       > 		super.method3();//调用的是父类中声明的
+       > 		//调用接口中的默认方法
+       > 		CompareA.super.method3();
+       > 		CompareB.super.method3();
+       > 	}
+
+12. 面试题：
+
+    抽象类和接口的异同？
+
+    相同点：不能实例化；都可以包含抽象方法的。
+
+    不同点：
+
+    ​	把抽象类和接口(java7,java8,java9)的定义、内部结构解释说明
+
+    ​	类：单继承性    接口：多继承
+
+    ​	类与接口：多实现
 
 
+
+### 代理模式
 
 
 

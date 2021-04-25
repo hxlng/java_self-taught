@@ -2813,13 +2813,107 @@ final：最终的
 
     5. 如何在子类(或实现类)的方法中调用父类、接口中被重写的方法
 
-       > public void myMethod(){
-       > 		method3();//调用自己定义的重写的方法
-       > 		super.method3();//调用的是父类中声明的
-       > 		//调用接口中的默认方法
-       > 		CompareA.super.method3();
-       > 		CompareB.super.method3();
-       > 	}
+       举例：
+       
+       SubClassTest.java
+       
+       ```java
+       public class SubClassTest {
+       	
+       	public static void main(String[] args) {
+       		SubClass s = new SubClass();
+       		
+       //		s.method1();
+       //		SubClass.method1();
+       		//知识点1：接口中定义的静态方法，只能通过接口来调用。
+       		CompareA.method1();
+       		//知识点2：通过实现类的对象，可以调用接口中的默认方法。
+       		//如果实现类重写了接口中的默认方法，调用时，仍然调用的是重写以后的方法
+       		s.method2();
+       		//知识点3：如果子类(或实现类)继承的父类和实现的接口中声明了同名同参数的默认方法，
+       		//那么子类在没有重写此方法的情况下，默认调用的是父类中的同名同参数的方法。-->类优先原则
+       		//知识点4：如果实现类实现了多个接口，而这多个接口中定义了同名同参数的默认方法，
+       		//那么在实现类没有重写此方法的情况下，报错。-->接口冲突。
+       		//这就需要我们必须在实现类中重写此方法
+       		s.method3();
+       		
+       	}
+       	
+       }
+       
+       class SubClass extends SuperClass implements CompareA,CompareB{
+       	
+       	public void method2(){
+       		System.out.println("SubClass：上海");
+       	}
+       	
+       	public void method3(){
+       		System.out.println("SubClass：深圳");
+       	}
+       	
+       	//知识点5：如何在子类(或实现类)的方法中调用父类、接口中被重写的方法
+       	public void myMethod(){
+       		method3();//调用自己定义的重写的方法
+       		super.method3();//调用的是父类中声明的
+       		//调用接口中的默认方法
+       		CompareA.super.method3();
+       		CompareB.super.method3();
+       	}
+       }
+       ```
+       
+       SuperClass.java
+       
+       ```java 
+       public class SuperClass {
+       	
+       	public void method3(){
+       		System.out.println("SuperClass:北京");
+       	}
+       	
+       }
+       ```
+       
+       CompareA.java
+       
+       ```java 
+       /*
+        * 
+        * JDK8：除了定义全局常量和抽象方法之外，还可以定义静态方法、默认方法
+        * 
+        */
+       public interface CompareA {
+       	
+       	//静态方法
+       	public static void method1(){
+       		System.out.println("CompareA:北京");
+       	}
+       	//默认方法
+       	public default void method2(){
+       		System.out.println("CompareA：上海");
+       	}
+       	
+       	default void method3(){
+       		System.out.println("CompareA：上海");
+       	}
+       }
+       ```
+       
+       CompareB.java
+       
+       ```java
+       public interface CompareB {
+       	
+       	default void method3(){
+       		System.out.println("CompareB：上海");
+       	}
+       	
+       }
+       ```
+       
+       
+       
+       
 
 12. 面试题：
 
@@ -2838,6 +2932,190 @@ final：最终的
 
 
 ### 代理模式
+
+1. 解决的问题
+
+   代理模式是Java开发中使用较多的一种设计模式。代理设计就是为其他对象提供一种代理以控制对这个对象的访问。 
+
+2. 举例
+
+   ```java 
+   /*
+    * 接口的应用：代理模式
+    * 
+    */
+   public class NetWorkTest {
+   	public static void main(String[] args) {
+   		Server server = new Server();
+   //		server.browse();
+   		ProxyServer proxyServer = new ProxyServer(server);
+   		
+   		proxyServer.browse();
+   		 
+   	}
+   }
+   
+   interface NetWork{
+   	
+   	public void browse();
+   	
+   }
+   
+   //被代理类
+   class Server implements NetWork{
+   
+   	@Override
+   	public void browse() {
+   		System.out.println("真实的服务器访问网络");
+   	}
+   
+   }
+   //代理类
+   class ProxyServer implements NetWork{
+   	
+   	private NetWork work;
+   	
+   	public ProxyServer(NetWork work){
+   		this.work = work;
+   	}
+   	
+   
+   	public void check(){
+   		System.out.println("联网之前的检查工作");
+   	}
+   	
+   	@Override
+   	public void browse() {
+   		check();
+   		
+   		work.browse();
+   		
+   	}
+   	
+   }
+   ```
+
+3. 应用场景
+
+   <a href="https://sm.ms/image/EvGu6F238mrWcbp" target="_blank"><img src="https://i.loli.net/2021/04/25/EvGu6F238mrWcbp.png" ></a>
+
+
+
+### 工厂的设计模式
+
+1. 实现了创建者与调用者的分离，即将创建对象的具体过程屏蔽隔离起来，达到提高灵活性的目的。
+
+2. 具体模式
+
+   > 简单工厂模式：用来生产同一等级结构中的任意产品。（对于增加新的产品，需要修改已有代码）
+   > 工厂方法模式：用来生产同一等级结构中的固定产品。（支持增加任意产品)
+   > 抽象工厂模式：用来生产不同产品族的全部产品。（对于增加新的产品，无能为力；支持增加产品族)
+
+## 类的结构: 内部类
+
+内部类：类的第五个成员
+
+1. 定义：Java中允许将一个类A声明在另一个类B中，则类A就是内部类，类B称为外部类.
+
+2. 内部类的分类：
+
+   > 成员内部类（静态、非静态 ） vs 局部内部类(方法内、代码块内、构造器内)
+
+3. 成员内部类的理解：
+
+   * 一方面，作为外部类的成员：
+
+     > 调用外部类的结构
+     >
+     > 可以被static修饰
+     >
+     > 可以被4种不同的权限修饰
+
+   * 另一方面，作为一个类：
+
+     > 类内可以定义属性、方法、构造器等
+     >
+     > 可以被final修饰，表示此类不能被继承。言外之意，不使用final，就可以被继承
+     >
+     > 可以被abstract修饰
+
+4. 成员内部类：
+
+   1. 如何创建成员内部类的对象？(静态的，非静态的)
+
+      >  //创建静态的Dog内部类的实例(静态的成员内部类):
+      > Person.Dog dog = new Person.Dog();
+      >
+      > 
+      >
+      > 
+      >
+      > //创建非静态的Bird内部类的实例(非静态的成员内部类):
+      > //Person.Bird bird = new Person.Bird();//错误的
+      > Person p = new Person();
+      > Person.Bird bird = p.new Bird();
+
+   2. 如何在成员内部类中调用外部类的结构？
+
+      > class Person{
+      > 	String name = "小明";
+      > public void eat(){
+      > }
+      > //非静态成员内部类
+      > 	class Bird{
+      > 		String name = "杜鹃";
+      > 		public void display(String name){
+      > 			System.out.println(name);//方法的形参
+      > 			System.out.println(this.name);//内部类的属性
+      > 			System.out.println(Person.this.name);//外部类的属性
+      > 		//Person.this.eat();
+      > 		}
+      > 	}
+      > }
+
+   3. 局部内部类的使用：
+
+      > 	//返回一个实现了Comparable接口的类的对象
+      > 	public Comparable getComparable(){
+      > 		
+      > 		//创建一个实现了Comparable接口的类:局部内部类
+      > 		//方式一：
+      > //		class MyComparable implements Comparable{
+      > //
+      > //			@Override
+      > //			public int compareTo(Object o) {
+      > //				return 0;
+      > //			}
+      > //			
+      > //		}
+      > //		
+      > //		return new MyComparable();
+      > 		
+      >
+      > //方式二：
+      >
+      > return new Comparable(){
+      >
+      > @Override
+      > 			public int compareTo(Object o) {
+      > 				return 0;
+      >
+      > ​		}
+      >
+      > ​	};
+
+5. 注意点
+
+   在局部内部类的方法中（比如：show如果调用局部内部类所声明的方法(比如：method)中的局部变量(比如：num)的话,要求此局部变量声明为final的。
+
+   jdk 7及之前版本：要求此局部变量显式的声明为final的
+   jdk 8及之后的版本：可以省略final的声明
+
+   成员内部类和局部内部类，在编译以后，都会生成字节码文件。
+   格式：成员内部类：外部类\$内部类名.class
+         局部内部类：外部类\$数字内部类名.class
+
+   
 
 
 

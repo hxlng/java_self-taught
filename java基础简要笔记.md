@@ -8096,7 +8096,7 @@ LinkedHashMap底层使用的结构与HashMap相同，因为LinkedHashMap继承�
 > * 添加：put(Object key,Object value)
 > * 删除：remove(Object key)
 > * 修改：put(Object key,Object value)
-> * 查询：get(Object key)
+> * 查询：get(Object key)/Map.Entry下的getKey()/getValue()
 > * 长度：size()
 > * 遍历：keySet() / values() / entrySet()
 > ```
@@ -8259,6 +8259,47 @@ public class TreeMapTest {
 
 
 
+## 使用Properties读取配置文件
+
+```java
+public class PropertiesTest {
+
+    //Properties:常用来处理配置文件。key和value都是String类型
+    public static void main(String[] args)  {
+        FileInputStream fis = null;
+        try {
+            Properties pros = new Properties();
+
+            fis = new FileInputStream("jdbc.properties");
+            pros.load(fis);//加载流对应的文件
+
+            String name = pros.getProperty("name");
+            String password = pros.getProperty("password");
+
+            System.out.println("name = " + name + ", password = " + password);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(fis != null){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+    }
+}
+```
+
+
+
+
+
+
+
 ## Collections工具类的使用
 
 1. 作用：操作Collection和Map的工具类
@@ -8372,4 +8413,2804 @@ boolean replaceAll(List list，Object oldVal，Object newVal)：使用新值替�
 # 十二、泛型
 
 ## 泛型的理解
+
+1. 泛型的概念
+
+   所谓泛型，就是允许在定义类、接口时通过一个标识表示类中某个属性的类型或者是某个方法的返回值及参数类型。这个类型参数将在使用时（例如，继承或实现这个接口，用这个类型声明变量、创建对象时确定（即传入实际的类型参数，也称为类型实参）。
+
+2. 泛型的引入背景
+
+   集合容器类在设计阶段/声明阶段不能确定这个容器到底实际存的是什么类型的对象，所以在JDK1.5之前只能把元素类型设计为Object，JDK1.5之后使用泛型来解决。因为这个时候除了元素的类型不确定，其他的部分是确定的，例如关于这个元素如何保存，如何管理等是确定的，因此此时把元素的类型设计成一个参数，这个类型参数叫做泛型。Collection<E>，List<E>，ArrayList<E>   这个<E>就是类型参数，即泛型。
+
+## 泛型在集合中的使用
+
+1. 在集合中使用泛型之前的例子
+
+```java
+//在集合中使用泛型之前的情况：
+    @Test
+    public void test1(){
+        ArrayList list = new ArrayList();
+        //需求：存放学生的成绩
+        list.add(78);
+        list.add(76);
+        list.add(89);
+        list.add(88);
+        //问题一：类型不安全
+//        list.add("Tom");
+
+        for(Object score : list){
+            //问题二：强转时，可能出现ClassCastException
+            int stuScore = (Integer) score;
+
+            System.out.println(stuScore);
+
+        }
+
+    }
+```
+
+图示：
+
+<a href="https://sm.ms/image/TM4LrhuRP1FJxYV" target="_blank"><img src="https://i.loli.net/2021/05/17/TM4LrhuRP1FJxYV.png" ></a>
+
+```java
+//在集合中使用泛型的情况：以ArrayList为例
+    @Test
+    public void test2(){
+       ArrayList<Integer> list =  new ArrayList<Integer>();
+
+        list.add(78);
+        list.add(87);
+        list.add(99);
+        list.add(65);
+        //编译时，就会进行类型检查，保证数据的安全
+//        list.add("Tom");
+
+        //方式一：
+//        for(Integer score : list){
+//            //避免了强转操作
+//            int stuScore = score;
+//
+//            System.out.println(stuScore);
+//
+//        }
+        //方式二：
+        Iterator<Integer> iterator = list.iterator();
+        while(iterator.hasNext()){
+            int stuScore = iterator.next();
+            System.out.println(stuScore);
+        }
+        
+    }
+```
+
+
+
+图示：
+
+<a href="https://sm.ms/image/QRu2rwLtAGVf5nS" target="_blank"><img src="https://i.loli.net/2021/05/17/QRu2rwLtAGVf5nS.png" ></a>
+
+3. 在集合中使用泛型例子2
+
+   ```java 
+   //在集合中使用泛型的情况：以HashMap为例
+       @Test
+       public void test3(){
+   //        Map<String,Integer> map = new HashMap<String,Integer>();
+           //jdk7新特性：类型推断
+           Map<String,Integer> map = new HashMap<>();
+   
+           map.put("Tom",87);
+           map.put("Jerry",87);
+           map.put("Jack",67);
+   
+   //        map.put(123,"ABC");
+           //泛型的嵌套
+           Set<Map.Entry<String,Integer>> entry = map.entrySet();
+           Iterator<Map.Entry<String, Integer>> iterator = entry.iterator();
+   
+           while(iterator.hasNext()){
+               Map.Entry<String, Integer> e = iterator.next();
+               String key = e.getKey();
+               Integer value = e.getValue();
+               System.out.println(key + "----" + value);
+           }
+   
+       }
+   ```
+
+### 集合中使用泛型总结：
+
+1. 集合接口或集合类在jdk5.0时都修改为带泛型的结构。
+
+2. 在实例化集合类时，可以指明具体的泛型类型
+
+3. 指明完以后，在集合类或接口中凡是定义类或接口时，内部结构（比如：方法、构造器、属性等）使用到类的泛型的位置，都指定为实例化的泛型类型。
+
+   比如：add(E e)  --->实例化以后：add(Integer e)
+
+4. ==注意点：泛型的类型必须是类，不能是基本数据类型。需要用到基本数据类型的位置，拿包装类替换==
+
+5. 如果实例化时，没指明泛型的类型。默认类型为java.lang.Object类型。
+
+
+
+## 自定义泛型类、泛型接口、泛型方法
+
+1. 举例
+
+   Order.java
+
+   ```java
+   public class Order<T> {
+   
+       String orderName;
+       int orderId;
+   
+       //类的内部结构就可以使用类的泛型
+   
+       T orderT;
+   
+       public Order(){
+           //编译不通过
+   //        T[] arr = new T[10];
+           //编译通过
+           T[] arr = (T[]) new Object[10];
+       }
+   
+       public Order(String orderName,int orderId,T orderT){
+           this.orderName = orderName;
+           this.orderId = orderId;
+           this.orderT = orderT;
+       }
+   
+       //如下的三个方法都不是泛型方法
+       public T getOrderT(){
+           return orderT;
+       }
+   
+       public void setOrderT(T orderT){
+           this.orderT = orderT;
+       }
+   
+       @Override
+       public String toString() {
+           return "Order{" +
+                   "orderName='" + orderName + '\'' +
+                   ", orderId=" + orderId +
+                   ", orderT=" + orderT +
+                   '}';
+       }
+       //静态方法中不能使用类的泛型。
+   //    public static void show(T orderT){
+   //        System.out.println(orderT);
+   //    }
+   
+       public void show(){
+           //编译不通过
+   //        try{
+   //
+   //
+   //        }catch(T t){
+   //
+   //        }
+   
+       }
+   
+       //泛型方法：在方法中出现了泛型的结构，泛型参数与类的泛型参数没有任何关系。
+       //换句话说，泛型方法所属的类是不是泛型类都没有关系。
+       //泛型方法，可以声明为静态的。原因：泛型参数是在调用方法时确定的。并非在实例化类时确定。
+       public static <E>  List<E> copyFromArrayToList(E[] arr){
+   
+           ArrayList<E> list = new ArrayList<>();
+   
+           for(E e : arr){
+               list.add(e);
+           }
+           return list;
+   
+       }
+   }
+   ```
+
+2. SubOrder.java
+
+   ```java
+   public class SubOrder extends Order<Integer> {//SubOrder:不是泛型类
+   
+   
+       public static <E> List<E> copyFromArrayToList(E[] arr){
+   
+           ArrayList<E> list = new ArrayList<>();
+   
+           for(E e : arr){
+               list.add(e);
+           }
+           return list;
+   
+       }
+   
+   
+   }
+   ```
+
+   //实例化时，如下的代码是错误的
+   SubOrder<Integer> o = new SubOrder<>();
+
+   SubOrder1.java
+
+   ```java
+   public class SubOrder1<T> extends Order<T> {//SubOrder1<T>:仍然是泛型类
+   }
+   ```
+
+3. 测试
+
+   ```java
+   public class GenericTest1 {
+   
+       @Test
+       public void test1(){
+           //如果定义了泛型类，实例化没有指明类的泛型，则认为此泛型类型为Object类型
+           //要求：如果大家定义了类是带泛型的，建议在实例化时要指明类的泛型。
+           Order order = new Order();
+           order.setOrderT(123);
+           order.setOrderT("ABC");
+   
+           //建议：实例化时指明类的泛型
+           Order<String> order1 = new Order<String>("orderAA",1001,"order:AA");
+   
+           order1.setOrderT("AA:hello");
+   
+       }
+   
+       @Test
+       public void test2(){
+           SubOrder sub1 = new SubOrder();
+           //由于子类在继承带泛型的父类时，指明了泛型类型。则实例化子类对象时，不再需要指明泛型。
+           sub1.setOrderT(1122);
+   
+           SubOrder1<String> sub2 = new SubOrder1<>();
+           sub2.setOrderT("order2...");
+       }
+   
+       @Test
+       public void test3(){
+   
+           ArrayList<String> list1 = null;
+           ArrayList<Integer> list2 = new ArrayList<Integer>();
+           //泛型不同的引用不能相互赋值。
+   //        list1 = list2;
+   
+           Person p1 = null;
+           Person p2 = null;
+           p1 = p2;
+   
+   
+       }
+   
+       //测试泛型方法
+       @Test
+       public void test4(){
+           Order<String> order = new Order<>();
+           Integer[] arr = new Integer[]{1,2,3,4};
+           //泛型方法在调用时，指明泛型参数的类型。
+           List<Integer> list = order.copyFromArrayToList(arr);
+   
+           System.out.println(list);
+       }
+   }
+   ```
+
+### 注意点
+
+
+
+<a href="https://sm.ms/image/8ij9m7PNcZBxQTE" target="_blank"><img src="https://i.loli.net/2021/05/17/8ij9m7PNcZBxQTE.png" ></a>
+
+
+
+<a href="https://sm.ms/image/lFpdfgrHwqbaPei" target="_blank"><img src="https://i.loli.net/2021/05/17/lFpdfgrHwqbaPei.png" ></a>
+
+
+
+### 应用场景举例：
+
+```java
+/**
+ * 定义个泛型类 DAO<T>，在其中定义一个Map 成员变量，Map 的键为 String 类型，值为 T 类型。
+
+ 分别创建以下方法：
+ public void save(String id,T entity)： 保存 T 类型的对象到 Map 成员变量中
+ public T get(String id)：从 map 中获取 id 对应的对象
+ public void update(String id,T entity)：替换 map 中key为id的内容,改为 entity 对象
+ public List<T> list()：返回 map 中存放的所有 T 对象
+ public void delete(String id)：删除指定 id 对象
+
+ *
+ * @author shkstart
+ * @create 2019 下午 3:34
+ */
+public class DAO<T> {
+
+    private Map<String,T> map = new HashMap<String,T>();
+    //保存 T 类型的对象到 Map 成员变量中
+    public void save(String id,T entity){
+        map.put(id,entity);
+    }
+    //从 map 中获取 id 对应的对象
+    public T get(String id){
+        return map.get(id);
+    }
+    //替换 map 中key为id的内容,改为 entity 对象
+    public void update(String id,T entity){
+        if(map.containsKey(id)){
+            map.put(id,entity);
+        }
+    }
+    //返回 map 中存放的所有 T 对象
+    public List<T> list(){
+        //错误的：
+//        Collection<T> values = map.values();
+//        return (List<T>) values;
+        //正确的：
+        ArrayList<T> list = new ArrayList<>();
+        Collection<T> values = map.values();
+        for(T t : values){
+            list.add(t);
+        }
+        return list;
+
+    }
+    //删除指定 id 对象
+    public void delete(String id){
+        map.remove(id);
+    }
+
+}
+```
+
+```java
+/**
+ * 创建 DAO 类的对象， 分别调用其 save、get、update、list、delete 方法来操作 User 对象，
+ 使用 Junit 单元测试类进行测试。
+
+ * @author shkstart
+ * @create 2019 下午 3:45
+ */
+public class DAOTest {
+
+    public static void main(String[] args) {
+        DAO<User> dao = new DAO<User>();
+
+        dao.save("1001",new User(1001,34,"周杰伦"));
+        dao.save("1002",new User(1002,20,"昆凌"));
+        dao.save("1003",new User(1003,25,"蔡依林"));
+
+        dao.update("1003",new User(1003,30,"方文山"));
+
+        dao.delete("1002");
+
+        List<User> list = dao.list();
+//        System.out.println(list);
+        list.forEach(System.out::println);
+
+
+
+    }
+
+}
+```
+
+```java
+/**
+ * 定义一个 User 类：
+ 该类包含：private成员变量（int类型） id，age；（String 类型）name。
+
+ * @author shkstart
+ * @create 2019 下午 3:44
+ */
+public class User {
+
+    private int id;
+    private int age;
+    private String name;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public User(int id, int age, String name) {
+
+        this.id = id;
+        this.age = age;
+        this.name = name;
+    }
+
+    public User() {
+
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", age=" + age +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (id != user.id) return false;
+        if (age != user.age) return false;
+        return name != null ? name.equals(user.name) : user.name == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + age;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
+    }
+}
+```
+
+
+
+## 泛型在继承上的体现
+
+```java
+
+    /*
+    1. 泛型在继承方面的体现
+
+      虽然类A是类B的父类，但是G<A> 和G<B>二者不具备子父类关系，二者是并列关系。
+
+       补充：类A是类B的父类，A<G> 是 B<G> 的父类
+
+     */
+    @Test
+    public void test1(){
+
+        Object obj = null;
+        String str = null;
+        obj = str;
+
+        Object[] arr1 = null;
+        String[] arr2 = null;
+        arr1 = arr2;
+        //编译不通过
+//        Date date = new Date();
+//        str = date;
+        List<Object> list1 = null;
+        List<String> list2 = new ArrayList<String>();
+        //此时的list1和list2的类型不具有子父类关系
+        //编译不通过
+//        list1 = list2;
+        /*
+        反证法：
+        假设list1 = list2;
+           list1.add(123);导致混入非String的数据。出错。
+
+         */
+
+        show(list1);
+        show1(list2);
+
+    }
+
+
+
+    public void show1(List<String> list){
+
+    }
+
+    public void show(List<Object> list){
+
+    }
+
+    @Test
+    public void test2(){
+
+        AbstractList<String> list1 = null;
+        List<String> list2 = null;
+        ArrayList<String> list3 = null;
+
+        list1 = list3;
+        list2 = list3;
+
+        List<String> list4 = new ArrayList<>();
+
+    }
+```
+
+
+
+## 通配符
+
+```java
+    /*
+    2. 通配符的使用
+       通配符：?
+
+       类A是类B的父类，G<A>和G<B>是没有关系的，二者共同的父类是：G<?>
+
+
+     */
+
+    @Test
+    public void test3(){
+        List<Object> list1 = null;
+        List<String> list2 = null;
+
+        List<?> list = null;
+
+        list = list1;
+        list = list2;
+        //编译通过
+//        print(list1);
+//        print(list2);
+
+
+        //
+        List<String> list3 = new ArrayList<>();
+        list3.add("AA");
+        list3.add("BB");
+        list3.add("CC");
+        list = list3;
+        //添加(写入)：对于List<?>就不能向其内部添加数据。
+        //除了添加null之外。
+//        list.add("DD");
+//        list.add('?');
+
+        list.add(null);
+
+        //获取(读取)：允许读取数据，读取的数据类型为Object。
+        Object o = list.get(0);
+        System.out.println(o);
+
+
+    }
+
+    public void print(List<?> list){
+        Iterator<?> iterator = list.iterator();
+        while(iterator.hasNext()){
+            Object obj = iterator.next();
+            System.out.println(obj);
+        }
+    }
+```
+
+
+
+```java
+    3.有限制条件的通配符的使用。
+        ? extends A:
+                G<? extends A> 可以作为G<A>和G<B>的父类，其中B是A的子类
+
+        ? super A:
+                G<? super A> 可以作为G<A>和G<B>的父类，其中B是A的父类
+
+     */
+    @Test
+    public void test4(){
+
+        List<? extends Person> list1 = null;
+        List<? super Person> list2 = null;
+
+        List<Student> list3 = new ArrayList<Student>();
+        List<Person> list4 = new ArrayList<Person>();
+        List<Object> list5 = new ArrayList<Object>();
+
+        list1 = list3;
+        list1 = list4;
+//        list1 = list5;
+
+//        list2 = list3;
+        list2 = list4;
+        list2 = list5;
+
+        //读取数据：
+        list1 = list3;
+        Person p = list1.get(0);
+        //编译不通过
+        //Student s = list1.get(0);
+
+        list2 = list4;
+        Object obj = list2.get(0);
+        ////编译不通过
+//        Person obj = list2.get(0);
+
+        //写入数据：
+        //编译不通过
+//        list1.add(new Student());
+
+        //编译通过
+        list2.add(new Person());
+        list2.add(new Student());
+
+    }
+
+}
+```
+
+
+
+
+
+# 十三、IO流
+
+## File类
+
+### File类的理解
+
+1. File类的一个对象，代表一个文件或一个文件目录(俗称：文件夹)
+2. File类声明在java.io包下
+3.  File类中涉及到关于文件或文件目录的==创建、删除、重命名、修改时间、文件大小==等方法，并未涉及到写入或读取文件内容的操作。如果需要读取或写入文件内容，必须使用IO流来完成。
+4. 后续File类的对象常会作为参数传递到流的构造器中，指明读取或写入的“终点”。
+
+
+
+### File的实例化
+
+1. 常用构造器
+
+   File(String filePath)
+
+   File(String parentPath, String childPath)
+
+   File(File parentFile, String childPath)
+
+   ```java
+   @Test
+       public void test1(){
+           //构造器1
+           File file1 = new File("hello.txt");//相对于当前module
+           File file2 =  new File("D:\\workspace_idea1\\JavaSenior\\day08\\he.txt");
+   
+           System.out.println(file1);
+           System.out.println(file2);
+   
+           //构造器2：
+           File file3 = new File("D:\\workspace_idea1","JavaSenior");
+           System.out.println(file3);
+   
+           //构造器3：
+           File file4 = new File(file3,"hi.txt");
+           System.out.println(file4);
+       }
+   ```
+
+   
+
+2. 路径的分类
+
+   相对路径：相较于某个路径下，指明的路径
+
+   绝对路径：包含盘符在内的文件或文件目录的路径
+
+   说明：
+
+   IDEA中：如果大家开发使用JUnit中的单元测试方法测试，相对路径即为当前Module下。如果大家使用main()测试，相对路径即为当前的Project下。
+
+   Eclipse中：不管使用单元测试方法还是使用main()测试，相对路径都是当前的Project下。
+
+3. 路径分隔符
+
+   windows和DOS系统默认使用“\”来表示
+
+   UNIX和URL使用“/”来表示
+
+   
+
+### File类的常用方法
+
+<a href="https://sm.ms/image/Sdwt2oWAMQJG465" target="_blank"><img src="https://i.loli.net/2021/05/21/Sdwt2oWAMQJG465.png" ></a>
+
+```java
+@Test
+    public void test2(){
+        File file1 = new File("hello.txt");
+        File file2 = new File("d:\\io\\hi.txt");
+
+        System.out.println(file1.getAbsolutePath());
+        System.out.println(file1.getPath());
+        System.out.println(file1.getName());
+        System.out.println(file1.getParent());
+        System.out.println(file1.length());
+        System.out.println(new Date(file1.lastModified()));
+
+        System.out.println();
+
+        System.out.println(file2.getAbsolutePath());
+        System.out.println(file2.getPath());
+        System.out.println(file2.getName());
+        System.out.println(file2.getParent());
+        System.out.println(file2.length());
+        System.out.println(file2.lastModified());
+    }
+```
+
+```java
+@Test
+    public void test3(){
+        File file = new File("D:\\");
+
+        String[] list = file.list();
+        for(String s : list){
+            System.out.println(s);
+        }
+
+        System.out.println();
+
+        File[] files = file.listFiles();
+        for(File f : files){
+            System.out.println(f);
+        }
+
+    }
+```
+
+```java
+/*
+    public boolean renameTo(File dest):把文件重命名为指定的文件路径
+     比如：file1.renameTo(file2)为例：
+        要想保证返回true,需要file1在硬盘中是存在的，且file2不能在硬盘中存在。
+     */
+    @Test
+    public void test4(){
+        File file1 = new File("hello.txt");
+        File file2 = new File("D:\\hi.txt");
+
+        boolean renameTo = file1.renameTo(file2);
+        System.out.println(renameTo);
+
+    }
+```
+
+<a href="https://sm.ms/image/jKas8vewEQhyIRD" target="_blank"><img src="https://i.loli.net/2021/05/21/jKas8vewEQhyIRD.png" ></a>
+
+```java
+@Test
+    public void test5(){
+        File file1 = new File("hello.txt");
+//        file1 = new File("hello1.txt");
+
+        System.out.println(file1.isDirectory());
+        System.out.println(file1.isFile());
+        System.out.println(file1.exists());
+        System.out.println(file1.canRead());
+        System.out.println(file1.canWrite());
+        System.out.println(file1.isHidden());
+
+        System.out.println();
+
+        File file2 = new File("d:\\io");
+//        file2 = new File("d:\\io1");
+        System.out.println(file2.isDirectory());
+        System.out.println(file2.isFile());
+        System.out.println(file2.exists());
+        System.out.println(file2.canRead());
+        System.out.println(file2.canWrite());
+        System.out.println(file2.isHidden());
+
+    }
+```
+
+<a href="https://sm.ms/image/t7eF8NuCLhclVf3" target="_blank"><img src="https://i.loli.net/2021/05/21/t7eF8NuCLhclVf3.png" ></a>
+
+```java
+@Test
+    public void test6() throws IOException {
+        File file1 = new File("hi.txt");
+        if(!file1.exists()){
+            //文件的创建
+            file1.createNewFile();
+            System.out.println("创建成功");
+        }else{//文件存在
+            file1.delete();
+            System.out.println("删除成功");
+        }
+
+
+    }
+```
+
+```java
+@Test
+    public void test7(){
+        //文件目录的创建
+        File file1 = new File("d:\\io\\io1\\io3");
+
+        boolean mkdir = file1.mkdir();
+        if(mkdir){
+            System.out.println("创建成功1");
+        }
+
+        File file2 = new File("d:\\io\\io1\\io4");
+
+        boolean mkdir1 = file2.mkdirs();
+        if(mkdir1){
+            System.out.println("创建成功2");
+        }
+        //要想删除成功，io4文件目录下不能有子目录或文件
+        File file3 = new File("D:\\io\\io1\\io4");
+//        file3 = new File("D:\\io\\io1");
+        System.out.println(file3.delete());
+    }
+```
+
+
+
+### File类举例
+
+1. 创建一个与file同目录下的另一个文件
+
+   ```java
+   @Test
+       public void test1() throws IOException {
+           File file = new File("D:\\io\\io1\\hello.txt");
+           //创建一个与file同目录下的另外一个文件，文件名为：haha.txt
+           File destFile = new File(file.getParent(),"haha.txt");
+           boolean newFile = destFile.createNewFile();
+           if(newFile){
+               System.out.println("创建成功！");
+           }
+       }
+   ```
+
+2. 判断指定目录下是否有后缀名为.jpg的文件，如果有，就输出该文件名称。
+
+   ```java
+   public class FindJPGFileTest {
+   
+   	@Test
+   	public void test1(){
+   		File srcFile = new File("d:\\code");
+   		
+   		String[] fileNames = srcFile.list();
+   		for(String fileName : fileNames){
+   			if(fileName.endsWith(".jpg")){
+   				System.out.println(fileName);
+   			}
+   		}
+   	}
+   	@Test
+   	public void test2(){
+   		File srcFile = new File("d:\\code");
+   		
+   		File[] listFiles = srcFile.listFiles();
+   		for(File file : listFiles){
+   			if(file.getName().endsWith(".jpg")){
+   				System.out.println(file.getAbsolutePath());
+   			}
+   		}
+   	}
+   ```
+
+   ```java
+   /*
+   	 * File类提供了两个文件过滤器方法
+   	 * public String[] list(FilenameFilter filter)
+   	 * public File[] listFiles(FileFilter filter)
+   
+   	 */
+   	@Test
+   	public void test3(){
+   		File srcFile = new File("d:\\code");
+   		
+   		File[] subFiles = srcFile.listFiles(new FilenameFilter() {
+   			
+   			@Override
+   			public boolean accept(File dir, String name) {
+   				return name.endsWith(".jpg");
+   			}
+   		});
+   		
+   		for(File file : subFiles){
+   			System.out.println(file.getAbsolutePath());
+   		}
+   	}
+   ```
+
+   
+
+3. 遍历指定目录所有文件名称，包括子文件目录中的文件。
+
+   拓展1：并计算指定目录占用空间的大小
+
+   拓展2：删除指定文件目录及其下的所有文件
+
+   ```java
+   public class ListFilesTest {
+   
+   	public static void main(String[] args) {
+   		// 递归:文件目录
+   		/** 打印出指定目录所有文件名称，包括子文件目录中的文件 */
+   
+   		// 1.创建目录对象
+   		File dir = new File("E:\\teach\\01_javaSE\\_尚硅谷Java编程语言\\3_软件");
+   
+   		// 2.打印目录的子文件
+   		printSubFile(dir);
+   	}
+   
+   	public static void printSubFile(File dir) {
+   		// 打印目录的子文件
+   		File[] subfiles = dir.listFiles();
+   
+   		for (File f : subfiles) {
+   			if (f.isDirectory()) {// 文件目录
+   				printSubFile(f);
+   			} else {// 文件
+   				System.out.println(f.getAbsolutePath());
+   			}
+   
+   		}
+   	}
+   
+   	// 方式二：循环实现
+   	// 列出file目录的下级内容，仅列出一级的话
+   	// 使用File类的String[] list()比较简单
+   	public void listSubFiles(File file) {
+   		if (file.isDirectory()) {
+   			String[] all = file.list();
+   			for (String s : all) {
+   				System.out.println(s);
+   			}
+   		} else {
+   			System.out.println(file + "是文件！");
+   		}
+   	}
+   
+   	// 列出file目录的下级，如果它的下级还是目录，接着列出下级的下级，依次类推
+   	// 建议使用File类的File[] listFiles()
+   	public void listAllSubFiles(File file) {
+   		if (file.isFile()) {
+   			System.out.println(file);
+   		} else {
+   			File[] all = file.listFiles();
+   			// 如果all[i]是文件，直接打印
+   			// 如果all[i]是目录，接着再获取它的下一级
+   			for (File f : all) {
+   				listAllSubFiles(f);// 递归调用：自己调用自己就叫递归
+   			}
+   		}
+   	}
+   
+   	// 拓展1：求指定目录所在空间的大小
+   	// 求任意一个目录的总大小
+   	public long getDirectorySize(File file) {
+   		// file是文件，那么直接返回file.length()
+   		// file是目录，把它的下一级的所有大小加起来就是它的总大小
+   		long size = 0;
+   		if (file.isFile()) {
+   			size += file.length();
+   		} else {
+   			File[] all = file.listFiles();// 获取file的下一级
+   			// 累加all[i]的大小
+   			for (File f : all) {
+   				size += getDirectorySize(f);// f的大小;
+   			}
+   		}
+   		return size;
+   	}
+   
+   	// 拓展2：删除指定的目录
+   	public void deleteDirectory(File file) {
+   		// 如果file是文件，直接delete
+   		// 如果file是目录，先把它的下一级干掉，然后删除自己
+   		if (file.isDirectory()) {
+   			File[] all = file.listFiles();
+   			// 循环删除的是file的下一级
+   			for (File f : all) {// f代表file的每一个下级
+   				deleteDirectory(f);
+   			}
+   		}
+   		// 删除自己
+   		file.delete();
+   	}
+   
+   }
+   ```
+
+
+
+
+## IO流概述
+
+### 流的分类
+
+1. 操作数据的单位：字节流、字符流
+2. 数据的流向：输入流、输出流
+3. 流的角色：节点流、处理流
+
+图示
+
+<a href="https://sm.ms/image/xv3HmJQfh1GeFop" target="_blank"><img src="https://i.loli.net/2021/05/21/xv3HmJQfh1GeFop.png" ></a>
+
+
+
+### 流的体系结构
+
+![image-20210521171640390](C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20210521171640390.png)
+
+重点说明的几个流结构
+
+<a href="https://sm.ms/image/LsVAP6mj1yOdqQJ" target="_blank"><img src="https://i.loli.net/2021/05/21/LsVAP6mj1yOdqQJ.png" ></a>
+
+### 输入、输出的标准化过程
+
+1. 输入过程
+
+   ① 创建File类的对象，指明读取的数据的来源。（要求此文件一定要存在）
+
+   ② 创建相应的输入流，将File类的对象作为参数，传入流的构造器中
+
+   ③ 具体的读入过程：
+
+   ​			创建相应的byte[] 或 char[]。
+
+   ④ 关闭流资源
+
+   ==说明==：程序中出现的异常需要使用try-catch-finally处理。
+
+2. 输出过程
+
+   ① 创建File类的对象，指明写出的数据的位置。（不要求此文件一定要存在）
+
+   ②创建相应的输出流，将File类的对象作为参数，传入流的构造器中。
+
+   ③具体的写出过程：
+
+    		write(char[]/byte[] buffer,0,len)
+
+   ④关闭流资源
+
+   ==说明==： 程序中出现的异常需要使用try-catch-finally
+
+   
+
+## 节点流（或文件流）
+
+### FileReader/FileWriter的使用：
+
+1. FileReader的使用
+
+   read()的理解：返回读入的一个字符。如果达到文件末尾，返回-1
+
+   read(char[] cbuf):返回每次读入cbuf数组中的字符的个数。如果达到文件末尾，返回-1
+
+   异常的处理：为了保证流资源一定可以执行关闭操作。需要使用try-catch-finally处理
+
+   读入的文件一定要存在，否则就会报FileNotFoundException。
+
+   ```java
+   @Test
+       public void testFileReader(){
+           FileReader fr = null;
+           try {
+               //1.实例化File类的对象，指明要操作的文件
+               File file = new File("hello.txt");//相较于当前Module
+               //2.提供具体的流
+               fr = new FileReader(file);
+   
+               //3.数据的读入
+               //read():返回读入的一个字符。如果达到文件末尾，返回-1
+               //方式一：
+   //        int data = fr.read();
+   //        while(data != -1){
+   //            System.out.print((char)data);
+   //            data = fr.read();
+   //        }
+   
+               //方式二：语法上针对于方式一的修改
+               int data;
+               while((data = fr.read()) != -1){
+                   System.out.print((char)data);
+               }
+           } catch (IOException e) {
+               e.printStackTrace();
+           } finally {
+               //4.流的关闭操作
+   //            try {
+   //                if(fr != null)
+   //                    fr.close();
+   //            } catch (IOException e) {
+   //                e.printStackTrace();
+   //            }
+               //或
+               if(fr != null){
+                   try {
+                       fr.close();
+                   } catch (IOException e) {
+                       e.printStackTrace();
+                   }
+               }
+           }
+   
+       }
+   
+       //对read()操作升级：使用read的重载方法
+       @Test
+       public void testFileReader1()  {
+           FileReader fr = null;
+           try {
+               //1.File类的实例化
+               File file = new File("hello.txt");
+   
+               //2.FileReader流的实例化
+               fr = new FileReader(file);
+   
+               //3.读入的操作
+               //read(char[] cbuf):返回每次读入cbuf数组中的字符的个数。如果达到文件末尾，返回-1
+               char[] cbuf = new char[5];
+               int len;
+               while((len = fr.read(cbuf)) != -1){
+                   //方式一：
+                   //错误的写法
+   //                for(int i = 0;i < cbuf.length;i++){
+   //                    System.out.print(cbuf[i]);
+   //                }
+                   //正确的写法
+   //                for(int i = 0;i < len;i++){
+   //                    System.out.print(cbuf[i]);
+   //                }
+                   //方式二：
+                   //错误的写法,对应着方式一的错误的写法
+   //                String str = new String(cbuf);
+   //                System.out.print(str);
+                   //正确的写法
+                   String str = new String(cbuf,0,len);
+                   System.out.print(str);
+               }
+           } catch (IOException e) {
+               e.printStackTrace();
+           } finally {
+               if(fr != null){
+                   //4.资源的关闭
+                   try {
+                       fr.close();
+                   } catch (IOException e) {
+                       e.printStackTrace();
+                   }
+   
+               }
+           }
+   
+       }
+   ```
+
+2. FileWriter的使用
+
+   从内存中写出数据到硬盘的文件里。
+
+   说明：
+
+   1. 输出操作，对应的File可以不存在的。并不会报异常 
+
+   2. File对应的硬盘中的文件如果不存在，在输出的过程中，会自动创建此文件。
+
+      File对应的硬盘中的文件如果存在：
+
+      ​	如果流使用的构造器是：FileWriter(file,false) / FileWriter(file):对原文件的==覆盖==
+
+      ​	如果流使用的构造器是：FileWriter(file,true):不会对原文件覆盖，而是在原文件基础上追加内容
+
+      ```java
+      @Test
+          public void testFileWriter() {
+              FileWriter fw = null;
+              try {
+                  //1.提供File类的对象，指明写出到的文件
+                  File file = new File("hello1.txt");
+      
+                  //2.提供FileWriter的对象，用于数据的写出
+                  fw = new FileWriter(file,false);
+      
+                  //3.写出的操作
+                  fw.write("I have a dream!\n");
+                  fw.write("you need to have a dream!");
+              } catch (IOException e) {
+                  e.printStackTrace();
+              } finally {
+                  //4.流资源的关闭
+                  if(fw != null){
+      
+                      try {
+                          fw.close();
+                      } catch (IOException e) {
+                          e.printStackTrace();
+                      }
+                  }
+              }
+      
+      
+          }
+      
+          @Test
+          public void testFileReaderFileWriter() {
+              FileReader fr = null;
+              FileWriter fw = null;
+              try {
+                  //1.创建File类的对象，指明读入和写出的文件
+                  File srcFile = new File("hello.txt");
+                  File destFile = new File("hello2.txt");
+      
+                  //不能使用字符流来处理图片等字节数据
+      //            File srcFile = new File("爱情与友情.jpg");
+      //            File destFile = new File("爱情与友情1.jpg");
+      
+      
+                  //2.创建输入流和输出流的对象
+                  fr = new FileReader(srcFile);
+                  fw = new FileWriter(destFile);
+      
+      
+                  //3.数据的读入和写出操作
+                  char[] cbuf = new char[5];
+                  int len;//记录每次读入到cbuf数组中的字符的个数
+                  while((len = fr.read(cbuf)) != -1){
+                      //每次写出len个字符
+                      fw.write(cbuf,0,len);
+      
+                  }
+              } catch (IOException e) {
+                  e.printStackTrace();
+              } finally {
+                  //4.关闭流资源
+                  //方式一：
+      //            try {
+      //                if(fw != null)
+      //                    fw.close();
+      //            } catch (IOException e) {
+      //                e.printStackTrace();
+      //            }finally{
+      //                try {
+      //                    if(fr != null)
+      //                        fr.close();
+      //                } catch (IOException e) {
+      //                    e.printStackTrace();
+      //                }
+      //            }
+                  //方式二：
+                  try {
+                      if(fw != null)
+                          fw.close();
+                  } catch (IOException e) {
+                      e.printStackTrace();
+                  }
+      
+                  try {
+                      if(fr != null)
+                          fr.close();
+                  } catch (IOException e) {
+                      e.printStackTrace();
+                  }
+      
+              }
+      
+          }
+      
+      }
+      ```
+
+      
+
+### FileInputStream/FileOutputStream的使用：
+
+测试FileInputStream和FileOutputStream的使用
+
+结论：
+
+对于文本文件(.txt,.java,.c,.cpp)，使用字符流处理
+
+对于非文本文件(.jpg,.mp3,.mp4,.avi,.doc,.ppt,...)，使用字节流处理
+
+```java
+@Test
+    public void testFileInputOutputStream()  {
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        try {
+            //1.造文件
+            File srcFile = new File("爱情与友情.jpg");
+            File destFile = new File("爱情与友情2.jpg");
+
+            //2.造流
+            fis = new FileInputStream(srcFile);
+            fos = new FileOutputStream(destFile);
+
+            //复制的过程
+            byte[] buffer = new byte[5];
+            int len;
+            while((len = fis.read(buffer)) != -1){
+                fos.write(buffer,0,len);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(fos != null){
+                //
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(fis != null){
+                //4.关闭流
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+    }
+```
+
+
+
+## 缓冲流的使用
+
+### 缓冲流涉及到的类及作用：
+
+BufferedInputStream
+
+BufferedOutputStream
+
+BufferedReader
+
+BufferedWriter
+
+作用：提高流的读取、写入的速度
+
+提高读写速度的原因：内部提供了一个缓冲区。默认情况下是8kb
+
+处理流，就是“套接”在已有的流的基础上
+
+<a href="https://sm.ms/image/wUNyARLc8S5JGz6" target="_blank"><img src="https://i.loli.net/2021/05/21/wUNyARLc8S5JGz6.png" ></a>
+
+
+
+### BufferedInputStream和BufferedOutputStream使用
+
+```java
+/*
+    实现非文本文件的复制
+     */
+    @Test
+    public void BufferedStreamTest() throws FileNotFoundException {
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+
+        try {
+            //1.造文件
+            File srcFile = new File("爱情与友情.jpg");
+            File destFile = new File("爱情与友情3.jpg");
+            //2.造流
+            //2.1 造节点流
+            FileInputStream fis = new FileInputStream((srcFile));
+            FileOutputStream fos = new FileOutputStream(destFile);
+            //2.2 造缓冲流
+            bis = new BufferedInputStream(fis);
+            bos = new BufferedOutputStream(fos);
+
+            //3.复制的细节：读取、写入
+            byte[] buffer = new byte[10];
+            int len;
+            while((len = bis.read(buffer)) != -1){
+                bos.write(buffer,0,len);
+
+//                bos.flush();//刷新缓冲区
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //4.资源关闭
+            //要求：先关闭外层的流，再关闭内层的流
+            if(bos != null){
+                try {
+                    bos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            if(bis != null){
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            //说明：关闭外层流的同时，内层流也会自动的进行关闭。关于内层流的关闭，我们可以省略.
+//        fos.close();
+//        fis.close();
+        }
+    }
+
+    //实现文件复制的方法
+    public void copyFileWithBuffered(String srcPath,String destPath){
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+
+        try {
+            //1.造文件
+            File srcFile = new File(srcPath);
+            File destFile = new File(destPath);
+            //2.造流
+            //2.1 造节点流
+            FileInputStream fis = new FileInputStream((srcFile));
+            FileOutputStream fos = new FileOutputStream(destFile);
+            //2.2 造缓冲流
+            bis = new BufferedInputStream(fis);
+            bos = new BufferedOutputStream(fos);
+
+            //3.复制的细节：读取、写入
+            byte[] buffer = new byte[1024];
+            int len;
+            while((len = bis.read(buffer)) != -1){
+                bos.write(buffer,0,len);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //4.资源关闭
+            //要求：先关闭外层的流，再关闭内层的流
+            if(bos != null){
+                try {
+                    bos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            if(bis != null){
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            //说明：关闭外层流的同时，内层流也会自动的进行关闭。关于内层流的关闭，我们可以省略.
+//        fos.close();
+//        fis.close();
+        }
+    }
+```
+
+
+
+###  使用BufferedReader和BufferedWriter：处理文本文件
+
+```java
+    /*
+    使用BufferedReader和BufferedWriter实现文本文件的复制
+
+     */
+    @Test
+    public void testBufferedReaderBufferedWriter(){
+        BufferedReader br = null;
+        BufferedWriter bw = null;
+        try {
+            //创建文件和相应的流
+            br = new BufferedReader(new FileReader(new File("dbcp.txt")));
+            bw = new BufferedWriter(new FileWriter(new File("dbcp1.txt")));
+
+            //读写操作
+            //方式一：使用char[]数组
+//            char[] cbuf = new char[1024];
+//            int len;
+//            while((len = br.read(cbuf)) != -1){
+//                bw.write(cbuf,0,len);
+//    //            bw.flush();
+//            }
+
+            //方式二：使用String
+            String data;
+            while((data = br.readLine()) != null){
+                //方法一：
+//                bw.write(data + "\n");//data中不包含换行符
+                //方法二：
+                bw.write(data);//data中不包含换行符
+                bw.newLine();//提供换行的操作
+
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //关闭资源
+            if(bw != null){
+
+                try {
+                    bw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(br != null){
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+    }
+```
+
+
+
+## 转换流的使用
+
+1. 转换流涉及到的类：属于字符流
+
+   InputStreamReader：将一个字节的输入流转换为字符的输入流
+
+   解码：字节、字节数组  --->字符数组、字符串
+
+   OutputStreamWriter：将一个字符的输出流转换为字节的输出流
+
+   编码：字符数组、字符串----->字节、字节数组
+
+   说明：编码决定了解码的方式
+
+2. 作用：提供字节流与字符流之间的转换
+
+   图示
+
+   <a href="https://sm.ms/image/osByfTKuHr9nEd5" target="_blank"><img src="https://i.loli.net/2021/05/21/osByfTKuHr9nEd5.png" ></a>
+
+   
+
+3. 典型实现
+
+   ```java
+   /*
+       此时处理异常的话，仍然应该使用try-catch-finally
+       InputStreamReader的使用，实现字节的输入流到字符的输入流的转换
+        */
+       @Test
+       public void test1() throws IOException {
+   
+           FileInputStream fis = new FileInputStream("dbcp.txt");
+   //        InputStreamReader isr = new InputStreamReader(fis);//使用系统默认的字符集
+           //参数2指明了字符集，具体使用哪个字符集，取决于文件dbcp.txt保存时使用的字符集
+           InputStreamReader isr = new InputStreamReader(fis,"UTF-8");//使用系统默认的字符集
+   
+           char[] cbuf = new char[20];
+           int len;
+           while((len = isr.read(cbuf)) != -1){
+               String str = new String(cbuf,0,len);
+               System.out.print(str);
+           }
+   
+           isr.close();
+   
+       }
+   
+       /*
+       此时处理异常的话，仍然应该使用try-catch-finally
+   
+       综合使用InputStreamReader和OutputStreamWriter
+        */
+       @Test
+       public void test2() throws Exception {
+           //1.造文件、造流
+           File file1 = new File("dbcp.txt");
+           File file2 = new File("dbcp_gbk.txt");
+   
+           FileInputStream fis = new FileInputStream(file1);
+           FileOutputStream fos = new FileOutputStream(file2);
+   
+           InputStreamReader isr = new InputStreamReader(fis,"utf-8");
+           OutputStreamWriter osw = new OutputStreamWriter(fos,"gbk");
+   
+           //2.读写过程
+           char[] cbuf = new char[20];
+           int len;
+           while((len = isr.read(cbuf)) != -1){
+               osw.write(cbuf,0,len);
+           }
+   
+           //3.关闭资源
+           isr.close();
+           osw.close();
+   
+   
+       }
+   
+   
+   }
+   ```
+
+   
+
+
+
+## 编码集
+
+1. 常见的编码表
+
+   ASCII：美国标准信息交换码。
+   		用一个字节的7位可以表示。
+   ISO8859-1：拉丁码表。欧洲码表
+   		用一个字节的8位表示。
+   GB2312：中国的中文编码表。最多两个字节编码所有字符
+   GBK：中国的中文编码表升级，融合了更多的中文文字符号。最多两个字节编码
+   Unicode：国际标准码，融合了目前人类使用的所字符。为每个字符分配唯一的字符码。所有的文字都用两个字节来表示。
+   UTF-8：变长的编码方式，可用1-4个字节来表示一个字符
+
+2. 对后面学习的启示
+
+   客户端/浏览器端    <---->  后台(java,GO,Python,Node.js,php)   <----> 数据库
+
+   要求前前后后使用的字符集都要统一：UTF-8.
+
+
+
+## 其它的流的使用
+
+1. 标准的输入输出流：
+
+   System.in:标准的输入流，默认从键盘输入
+
+   System.out：标准的输出流，默认从控制台输出
+
+   修改默认的输入和输出行为：
+
+   System类的setIn(InputStream is )/setOut(PrintStream ps)方式重新指定输入和输出的流。
+
+   练习：
+
+   ```
+   从键盘输入字符串，要求将读取到的整行字符串转成大写输出。然后继续进行输入操作，
+   直至当输入“e”或者“exit”时，退出程序。
+   方法一：使用Scanner实现，调用next()返回一个字符串
+   方法二：使用System.in实现。System.in  --->  转换流 ---> BufferedReader的readLine()
+   ```
+
+   ```java
+   public static void main(String[] args) {
+           BufferedReader br = null;
+           try {
+               InputStreamReader isr = new InputStreamReader(System.in);
+               br = new BufferedReader(isr);
+   
+               while (true) {
+                   System.out.println("请输入字符串：");
+                   String data = br.readLine();
+                   if ("e".equalsIgnoreCase(data) || "exit".equalsIgnoreCase(data)) {
+                       System.out.println("程序结束");
+                       break;
+                   }
+   
+                   String upperCase = data.toUpperCase();
+                   System.out.println(upperCase);
+   
+               }
+           } catch (IOException e) {
+               e.printStackTrace();
+           } finally {
+               if (br != null) {
+                   try {
+                       br.close();
+                   } catch (IOException e) {
+                       e.printStackTrace();
+                   }
+   
+               }
+           }
+       }
+   ```
+
+   
+
+2. 打印流：
+
+   PrintStream和PrintWriter
+
+   说明：
+
+   提供了一系列重载的print()和println()方法，用于多种数据类型的输出
+
+   System.out返回的是PrintStream的实例
+
+   练习：
+
+   ```java
+   @Test
+       public void test2() {
+           PrintStream ps = null;
+           try {
+               FileOutputStream fos = new FileOutputStream(new File("D:\\IO\\text.txt"));
+               // 创建打印输出流,设置为自动刷新模式(写入换行符或字节 '\n' 时都会刷新输出缓冲区)
+               ps = new PrintStream(fos, true);
+               if (ps != null) {// 把标准输出流(控制台输出)改成文件
+                   System.setOut(ps);
+               }
+   
+   
+               for (int i = 0; i <= 255; i++) { // 输出ASCII字符
+                   System.out.print((char) i);
+                   if (i % 50 == 0) { // 每50个数据一行
+                       System.out.println(); // 换行
+                   }
+               }
+   
+   
+           } catch (FileNotFoundException e) {
+               e.printStackTrace();
+           } finally {
+               if (ps != null) {
+                   ps.close();
+               }
+           }
+   
+       }
+   ```
+
+   
+
+3. 数据流
+
+   DataInputStream和DataOutputStream
+
+   作用：
+
+   用于读取或写出基本数据类型的变量或字符串
+
+   练习：将内存中的字符串、基本数据类型的变量写出到文件中。
+
+   注意：处理异常的话，仍然应该使用try-catch-finally.
+
+   ```java
+   @Test
+       public void test3() throws IOException {
+           //1.
+           DataOutputStream dos = new DataOutputStream(new FileOutputStream("data.txt"));
+           //2.
+           dos.writeUTF("刘建辰");
+           dos.flush();//刷新操作，将内存中的数据写入文件
+           dos.writeInt(23);
+           dos.flush();
+           dos.writeBoolean(true);
+           dos.flush();
+           //3.
+           dos.close();
+   
+   
+       }
+   ```
+
+   练习：
+
+   将文件中存储的基本数据类型变量和字符串读取到内存中，保存在变量中。
+
+   注意点：读取不同类型的数据的顺序要与当初写入文件时，保存的数据的顺序一致！
+
+   ```java
+   @Test
+   public void test4() throws IOException {
+       //1.
+       DataInputStream dis = new DataInputStream(new FileInputStream("data.txt"));
+       //2.
+       String name = dis.readUTF();
+       int age = dis.readInt();
+       boolean isMale = dis.readBoolean();
+   
+       System.out.println("name = " + name);
+       System.out.println("age = " + age);
+       System.out.println("isMale = " + isMale);
+   
+       //3.
+       dis.close();
+   
+   }
+   ```
+
+   
+
+## 对象流的使用
+
+1. 对象流：
+
+   ObjectInputStream和ObjectOutputStream
+
+2. 作用：
+
+   ObjectOutputStream：内存中的对象------>存储中的文件、通过网络传输出去：序列化过程
+
+   ObjectInputStream:存储中的文件、通过网络接收过来 --->内存中的对象：反序列化过程
+
+3. 对象的序列化机制：
+
+   对象序列化机制允许把内存中的Java对象转换成平台无关的二进制流，从而允许把这种二进制流持久地保存在磁盘上，或通过网络将这种二进制流传输到另一个网络节点。当其它程序获取了这种二进制流，就可以恢复成原来的Java对象。
+
+   ```java
+   public class ObjectInputOutputStreamTest {
+   
+       /*
+       序列化过程：将内存中的java对象保存到磁盘中或通过网络传输出去
+       使用ObjectOutputStream实现
+        */
+       @Test
+       public void testObjectOutputStream(){
+           ObjectOutputStream oos = null;
+   
+           try {
+               //1.
+               oos = new ObjectOutputStream(new FileOutputStream("object.dat"));
+               //2.
+               oos.writeObject(new String("我爱北京天安门"));
+               oos.flush();//刷新操作
+   
+               oos.writeObject(new Person("王铭",23));
+               oos.flush();
+   
+               oos.writeObject(new Person("张学良",23,1001,new Account(5000)));
+               oos.flush();
+   
+           } catch (IOException e) {
+               e.printStackTrace();
+           } finally {
+               if(oos != null){
+                   //3.
+                   try {
+                       oos.close();
+                   } catch (IOException e) {
+                       e.printStackTrace();
+                   }
+   
+               }
+           }
+   
+       }
+   
+       /*
+       反序列化：将磁盘文件中的对象还原为内存中的一个java对象
+       使用ObjectInputStream来实现
+        */
+       @Test
+       public void testObjectInputStream(){
+           ObjectInputStream ois = null;
+           try {
+               ois = new ObjectInputStream(new FileInputStream("object.dat"));
+   
+               Object obj = ois.readObject();
+               String str = (String) obj;
+   
+               Person p = (Person) ois.readObject();
+               Person p1 = (Person) ois.readObject();
+   
+               System.out.println(str);
+               System.out.println(p);
+               System.out.println(p1);
+   
+           } catch (IOException e) {
+               e.printStackTrace();
+           } catch (ClassNotFoundException e) {
+               e.printStackTrace();
+           } finally {
+               if(ois != null){
+                   try {
+                       ois.close();
+                   } catch (IOException e) {
+                       e.printStackTrace();
+                   }
+   
+               }
+           }
+   
+   
+   
+       }
+   
+   }
+   ```
+
+4. 实现序列化的对象所属的类需要满足：
+
+   1. 需要实现接口：Serializable
+
+   2. 当前类提供一个全局常量：serialVersionUID
+
+   3. 除了当前Person类需要实现Serializable接口之外，还必须保证其内部所属性也必须是可序列化的。（默认情况下，基本数据类型可序列化）
+
+      补充：ObjectOutputStream和ObjectInputStream不能序列化static和transient修饰的成员变量
+
+      ```java
+      public class Person implements Serializable{
+      
+          public static final long serialVersionUID = 475463534532L;
+      
+          private String name;
+          private int age;
+          private int id;
+          private Account acct;
+      
+          public Person(String name, int age, int id) {
+              this.name = name;
+              this.age = age;
+              this.id = id;
+          }
+      
+          public Person(String name, int age, int id, Account acct) {
+              this.name = name;
+              this.age = age;
+              this.id = id;
+              this.acct = acct;
+          }
+      
+          @Override
+          public String toString() {
+              return "Person{" +
+                      "name='" + name + '\'' +
+                      ", age=" + age +
+                      ", id=" + id +
+                      ", acct=" + acct +
+                      '}';
+          }
+      
+          public int getId() {
+              return id;
+          }
+      
+          public void setId(int id) {
+              this.id = id;
+          }
+      
+          public String getName() {
+              return name;
+          }
+      
+          public void setName(String name) {
+              this.name = name;
+          }
+      
+          public int getAge() {
+              return age;
+          }
+      
+          public void setAge(int age) {
+              this.age = age;
+          }
+      
+          public Person(String name, int age) {
+      
+              this.name = name;
+              this.age = age;
+          }
+      
+          public Person() {
+      
+          }
+      }
+      
+      class Account implements Serializable{
+          public static final long serialVersionUID = 4754534532L;
+          private double balance;
+      
+          @Override
+          public String toString() {
+              return "Account{" +
+                      "balance=" + balance +
+                      '}';
+          }
+      
+          public double getBalance() {
+              return balance;
+          }
+      
+          public void setBalance(double balance) {
+              this.balance = balance;
+          }
+      
+          public Account(double balance) {
+      
+              this.balance = balance;
+          }
+      }
+      ```
+
+
+
+## RandomAccessFile的使用
+
+1. 随机存取文件流：RandomAccessFile
+
+2. 使用说明
+
+   1. RandomAccessFile直接继承于java.lang.Object类，实现了DataInput和DataOutput接口
+   2. RandomAccessFile==既可以作为一个输入流，又可以作为一个输出流==
+   3. 如果RandomAccessFile作为输出流时，写出到的文件如果不存在，则在执行过程中自动创建。如果写出到的文件存在，则会对原文件内容进行覆盖。（默认情况下，从头覆盖）
+   4. 可以通过相关的操作，实现RandomAccessFile“插入”数据的效果。seek(int pos)
+
+   ```java
+   public class RandomAccessFileTest {
+   
+       @Test
+       public void test1() {
+   
+           RandomAccessFile raf1 = null;
+           RandomAccessFile raf2 = null;
+           try {
+               //1.
+               raf1 = new RandomAccessFile(new File("爱情与友情.jpg"),"r");
+               raf2 = new RandomAccessFile(new File("爱情与友情1.jpg"),"rw");
+               //2.
+               byte[] buffer = new byte[1024];
+               int len;
+               while((len = raf1.read(buffer)) != -1){
+                   raf2.write(buffer,0,len);
+               }
+           } catch (IOException e) {
+               e.printStackTrace();
+           } finally {
+               //3.
+               if(raf1 != null){
+                   try {
+                       raf1.close();
+                   } catch (IOException e) {
+                       e.printStackTrace();
+                   }
+   
+               }
+               if(raf2 != null){
+                   try {
+                       raf2.close();
+                   } catch (IOException e) {
+                       e.printStackTrace();
+                   }
+   
+               }
+           }
+       }
+   
+       @Test
+       public void test2() throws IOException {
+   
+           RandomAccessFile raf1 = new RandomAccessFile("hello.txt","rw");
+   
+           raf1.seek(3);//将指针调到角标为3的位置
+           raf1.write("xyz".getBytes());//
+   
+           raf1.close();
+   
+       }
+       /*
+       使用RandomAccessFile实现数据的插入效果
+        */
+       @Test
+       public void test3() throws IOException {
+   
+           RandomAccessFile raf1 = new RandomAccessFile("hello.txt","rw");
+   
+           raf1.seek(3);//将指针调到角标为3的位置
+           //保存指针3后面的所有数据到StringBuilder中
+           StringBuilder builder = new StringBuilder((int) new File("hello.txt").length());
+           byte[] buffer = new byte[20];
+           int len;
+           while((len = raf1.read(buffer)) != -1){
+               builder.append(new String(buffer,0,len)) ;
+           }
+           //调回指针，写入“xyz”
+           raf1.seek(3);
+           raf1.write("xyz".getBytes());
+   
+           //将StringBuilder中的数据写入到文件中
+           raf1.write(builder.toString().getBytes());
+   
+           raf1.close();
+   
+           //思考：将StringBuilder替换为ByteArrayOutputStream
+       }
+   }
+   ```
+
+
+
+## Path、Paths、Files的说明
+
+1. NIO的使用说明：
+
+   >Java NIO (New IO，Non-Blocking IO)是从Java 1.4版本开始引入的一套新的IO API，可以替代标准的Java 
+   >IO AP。
+   >NIO与原来的IO同样的作用和目的，但是使用的方式完全不同，NIO支持面向缓冲区的(IO是面向流的)、基于
+   >通道的IO操作。
+   >NIO将以更加高效的方式进行文件的读写操作。
+   >随着 JDK 7 的发布，Java对NIO进行了极大的扩展，增强了对文件处理和文件系统特性的支持，以至于我们称他们为 NIO.2。
+
+2. Path的使用 ---jdk7提供
+
+   1. Path的说明：Path替换原有的File类。
+
+   2. 如何实例化：
+
+      <a href="https://sm.ms/image/lNpyGWjIV8nfrw9" target="_blank"><img src="https://i.loli.net/2021/05/22/lNpyGWjIV8nfrw9.png" ></a>
+
+   3. 常用方法
+
+      <a href="https://sm.ms/image/sjIM5nzTE9ubVka" target="_blank"><img src="https://i.loli.net/2021/05/22/sjIM5nzTE9ubVka.png" ></a>
+
+3. Files工具类 ---jdk7提供
+
+   1. 作用
+
+      操作文件或文件目录的工具类
+
+   2. 常用方法：
+
+   <a href="https://sm.ms/image/ugqN7kdEb3MDGjS" target="_blank"><img src="https://i.loli.net/2021/05/22/ugqN7kdEb3MDGjS.png" ></a>
+
+   <a href="https://sm.ms/image/8tCrFbuHi69aAIS" target="_blank"><img src="https://i.loli.net/2021/05/22/8tCrFbuHi69aAIS.png" ></a>
+
+   
+
+   
+
+   
+
+## 经典例题统计字符出现次数
+
+```java
+/**
+ * 练习3:获取文本上字符出现的次数,把数据写入文件
+ *
+ * 思路：
+ * 1.遍历文本每一个字符
+ * 2.字符出现的次数存在Map中
+ *
+ * Map<Character,Integer> map = new HashMap<Character,Integer>();
+ * map.put('a',18);
+ * map.put('你',2);
+ *
+ * 3.把map中的数据写入文件
+ *
+ * @author shkstart
+ * @create 2019 下午 3:47
+ */
+public class WordCount {
+    /*
+    说明：如果使用单元测试，文件相对路径为当前module
+          如果使用main()测试，文件相对路径为当前工程
+     */
+    @Test
+    public void testWordCount() {
+        FileReader fr = null;
+        BufferedWriter bw = null;
+        try {
+            //1.创建Map集合
+            Map<Character, Integer> map = new HashMap<Character, Integer>();
+
+            //2.遍历每一个字符,每一个字符出现的次数放到map中
+            fr = new FileReader("dbcp.txt");
+            int c = 0;
+            while ((c = fr.read()) != -1) {
+                //int 还原 char
+                char ch = (char) c;
+                // 判断char是否在map中第一次出现
+                if (map.get(ch) == null) {
+                    map.put(ch, 1);
+                } else {
+                    map.put(ch, map.get(ch) + 1);
+                }
+            }
+
+            //3.把map中数据存在文件count.txt
+            //3.1 创建Writer
+            bw = new BufferedWriter(new FileWriter("wordcount.txt"));
+
+            //3.2 遍历map,再写入数据
+            Set<Map.Entry<Character, Integer>> entrySet = map.entrySet();
+            for (Map.Entry<Character, Integer> entry : entrySet) {
+                switch (entry.getKey()) {
+                    case ' ':
+                        bw.write("空格=" + entry.getValue());
+                        break;
+                    case '\t'://\t表示tab 键字符
+                        bw.write("tab键=" + entry.getValue());
+                        break;
+                    case '\r'://
+                        bw.write("回车=" + entry.getValue());
+                        break;
+                    case '\n'://
+                        bw.write("换行=" + entry.getValue());
+                        break;
+                    default:
+                        bw.write(entry.getKey() + "=" + entry.getValue());
+                        break;
+                }
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //4.关流
+            if (fr != null) {
+                try {
+                    fr.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            if (bw != null) {
+                try {
+                    bw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+    }
+}
+```
+
+
+
+
+
+
+
+# 十四、网络编程
+
+## InetAddress类的使用
+
+1. 实现网络通信需要解决的两个问题
+
+   1. 如何准确地定位网络上一台或多态主机；定位主机上的特定的应用
+   2. 找到主机后如何可靠高效地进行数据传输
+
+2. 网络通信的两个要素：
+
+   1. 对应问题一：IP和端口号
+   2. 对应问题二：提供网络通信协议；TCP/IP参考模型（应用层、传输层、网络层、物理+数据链路层）
+
+3. 通信要素一：IP和端口号
+
+   1. IP的理解
+
+      * IP:唯一的标识Internet上的计算机（通信实体）
+
+      * 在java中使用InetAddress类代表IP
+
+      * IP分类：IPv4和IPv6；万维网和局域网
+
+      * 域名：www.baidu.com   www.mi.com  www.sina.com  www.jd.com
+
+        域名解析：域名容易记忆，当在连接网络时输入一个主机的域名后，域名服务器（DNS）负责将域名转化成IP地址，这样才能和主机建立连接。
+
+      * 本地回路地址：127.0.0.1对应这：localhost
+
+   2. InetAddress类：此类的一个对象就代表这一个具体的IP地址
+
+      * 实例化
+
+        getByName(String host)、getLocalHost()
+
+      * 常用方法
+
+        getHostName()/getHostAddress()
+
+        ```java
+        public class InetAddressTest {
+        
+            public static void main(String[] args) {
+        
+                try {
+                    //File file = new File("hello.txt");
+                    InetAddress inet1 = InetAddress.getByName("192.168.10.14");
+        
+                    System.out.println(inet1);
+        
+                    InetAddress inet2 = InetAddress.getByName("www.atguigu.com");
+                    System.out.println(inet2);
+        
+                    InetAddress inet3 = InetAddress.getByName("127.0.0.1");
+                    System.out.println(inet3);
+        
+                    //获取本地ip
+                    InetAddress inet4 = InetAddress.getLocalHost();
+                    System.out.println(inet4);
+        
+                    //getHostName()
+                    System.out.println(inet2.getHostName());
+                    //getHostAddress()
+                    System.out.println(inet2.getHostAddress());
+        
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
+        
+        
+            }
+        }
+        ```
+
+        
+
+   3. 端口号：正在计算机上运行的进程。
+
+      * 要求：不同的进程不同的端口号
+      * 范围：被规定为一个16位的整数0~65535
+
+      端口号与IP地址的组合得出一个网络套接字：Socket
+
+4. 通信要素二：网络通信协议
+
+   * 分型模型
+
+     <a href="https://sm.ms/image/d8DcxEjnXW5eR17" target="_blank"><img src="https://i.loli.net/2021/05/22/d8DcxEjnXW5eR17.png" ></a>
+
+   * TCP和UDP的区别
+
+     <a href="https://sm.ms/image/aPmdM1gy62kRJni" target="_blank"><img src="https://i.loli.net/2021/05/22/aPmdM1gy62kRJni.png" ></a>
+
+   * TCP三次握手和四次挥手
+
+     <a href="https://sm.ms/image/zgRQvElG23KTuPt" target="_blank"><img src="https://i.loli.net/2021/05/22/zgRQvElG23KTuPt.png" ></a>
+
+     <a href="https://sm.ms/image/ljTROir4ptQxFgL" target="_blank"><img src="https://i.loli.net/2021/05/22/ljTROir4ptQxFgL.png" ></a>
+
+
+
+
+
+## TCP网络编程
+
+### 例子一
+
+客户端发送信息给服务端，服务端将数据显示在控制台上
+
+```java
+ //客户端
+    @Test
+    public void client()  {
+        Socket socket = null;
+        OutputStream os = null;
+        try {
+            //1.创建Socket对象，指明服务器端的ip和端口号
+            InetAddress inet = InetAddress.getByName("127.0.0.1");
+            socket = new Socket(inet,8899);
+            //2.获取一个输出流，用于输出数据
+            os = socket.getOutputStream();
+            //3.写出数据的操作
+            os.write("你好，我是客户端mm".getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //4.资源的关闭
+            if(os != null) {
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            if(socket != null){
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+
+
+
+    }
+    //服务端
+    @Test
+    public void server()  {
+
+        ServerSocket ss = null;
+        Socket socket = null;
+        InputStream is = null;
+        ByteArrayOutputStream baos = null;
+        try {
+            //1.创建服务器端的ServerSocket，指明自己的端口号
+            ss = new ServerSocket(8899);
+            //2.调用accept()表示接收来自于客户端的socket
+            socket = ss.accept();
+            //3.获取输入流
+            is = socket.getInputStream();
+
+            //不建议这样写，可能会有乱码
+//        byte[] buffer = new byte[1024];
+//        int len;
+//        while((len = is.read(buffer)) != -1){
+//            String str = new String(buffer,0,len);
+//            System.out.print(str);
+//        }
+            //4.读取输入流中的数据
+            baos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[5];
+            int len;
+            while((len = is.read(buffer)) != -1){
+                baos.write(buffer,0,len);
+            }
+
+            System.out.println(baos.toString());
+
+            System.out.println("收到了来自于：" + socket.getInetAddress().getHostAddress() + "的数据");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(baos != null){
+                //5.关闭资源
+                try {
+                    baos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(is != null){
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(socket != null){
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(ss != null){
+                try {
+                    ss.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+ }
+```
+
+
+
+### 例子二
+
+客户端发送文件给服务器，服务器将文件保存在本地
+
+```java
+    /*
+    这里涉及到的异常，应该使用try-catch-finally处理
+     */
+    @Test
+    public void client() throws IOException {
+        //1.
+        Socket socket = new Socket(InetAddress.getByName("127.0.0.1"),9090);
+        //2.
+        OutputStream os = socket.getOutputStream();
+        //3.
+        FileInputStream fis = new FileInputStream(new File("beauty.jpg"));
+        //4.
+        byte[] buffer = new byte[1024];
+        int len;
+        while((len = fis.read(buffer)) != -1){
+            os.write(buffer,0,len);
+        }
+        //5.
+        fis.close();
+        os.close();
+        socket.close();
+    }
+
+    /*
+    这里涉及到的异常，应该使用try-catch-finally处理
+     */
+    @Test
+    public void server() throws IOException {
+        //1.
+        ServerSocket ss = new ServerSocket(9090);
+        //2.
+        Socket socket = ss.accept();
+        //3.
+        InputStream is = socket.getInputStream();
+        //4.
+        FileOutputStream fos = new FileOutputStream(new File("beauty1.jpg"));
+        //5.
+        byte[] buffer = new byte[1024];
+        int len;
+        while((len = is.read(buffer)) != -1){
+            fos.write(buffer,0,len);
+        }
+        //6.
+        fos.close();
+        is.close();
+        socket.close();
+        ss.close();
+
+    }
+```
+
+
+
+
+
+### 例子三
+
+从客户端发送文件给服务器，服务器保存到本地。并返回“发送成功”给客户端。并关闭相应的连接
+
+```java
+/*
+        这里涉及到的异常，应该使用try-catch-finally处理
+         */
+    @Test
+    public void client() throws IOException {
+        //1.
+        Socket socket = new Socket(InetAddress.getByName("127.0.0.1"),9090);
+        //2.
+        OutputStream os = socket.getOutputStream();
+        //3.
+        FileInputStream fis = new FileInputStream(new File("beauty.jpg"));
+        //4.
+        byte[] buffer = new byte[1024];
+        int len;
+        while((len = fis.read(buffer)) != -1){
+            os.write(buffer,0,len);
+        }
+        //关闭数据的输出
+        socket.shutdownOutput();
+
+        //5.接收来自于服务器端的数据，并显示到控制台上
+        InputStream is = socket.getInputStream();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] bufferr = new byte[20];
+        int len1;
+        while((len1 = is.read(buffer)) != -1){
+            baos.write(buffer,0,len1);
+        }
+
+        System.out.println(baos.toString());
+
+        //6.
+        fis.close();
+        os.close();
+        socket.close();
+        baos.close();
+    }
+
+    /*
+    这里涉及到的异常，应该使用try-catch-finally处理
+     */
+    @Test
+    public void server() throws IOException {
+        //1.
+        ServerSocket ss = new ServerSocket(9090);
+        //2.
+        Socket socket = ss.accept();
+        //3.
+        InputStream is = socket.getInputStream();
+        //4.
+        FileOutputStream fos = new FileOutputStream(new File("beauty2.jpg"));
+        //5.
+        byte[] buffer = new byte[1024];
+        int len;
+        while((len = is.read(buffer)) != -1){
+            fos.write(buffer,0,len);
+        }
+
+        System.out.println("图片传输完成");
+
+        //6.服务器端给予客户端反馈
+        OutputStream os = socket.getOutputStream();
+        os.write("你好，美女，照片我已收到，非常漂亮！".getBytes());
+
+        //7.
+        fos.close();
+        is.close();
+        socket.close();
+        ss.close();
+        os.close();
+
+    }
+```
+
+
+
+## UDP网络编程
+
+```java
+//发送端
+    @Test
+    public void sender() throws IOException {
+
+        DatagramSocket socket = new DatagramSocket();
+
+
+
+        String str = "我是UDP方式发送的导弹";
+        byte[] data = str.getBytes();
+        InetAddress inet = InetAddress.getLocalHost();
+        DatagramPacket packet = new DatagramPacket(data,0,data.length,inet,9090);
+
+        socket.send(packet);
+
+        socket.close();
+
+    }
+    //接收端
+    @Test
+    public void receiver() throws IOException {
+
+        DatagramSocket socket = new DatagramSocket(9090);
+
+        byte[] buffer = new byte[100];
+        DatagramPacket packet = new DatagramPacket(buffer,0,buffer.length);
+
+        socket.receive(packet);
+
+        System.out.println(new String(packet.getData(),0,packet.getLength()));
+
+        socket.close();
+    }
+```
+
+
+
+
+
+## URL编程
+
+1. URL(Uniform Resource Locator)的理解:
+   统一资源定位符，对应着互联网的某一资源地址
+
+2. URL的5个基本结构：
+
+   *  http://localhost:8080/examples/beauty.jpg?username=Tom
+   *  协议   主机名    端口号  资源地址           参数列表
+
+3. 如何实例化：
+
+   URL url = new URL("http://localhost:8080/examples/beauty.jpg?username=Tom");
+
+4. 常用方法：
+
+   <a href="https://sm.ms/image/yt5sCNoaPfr7IYU" target="_blank"><img src="https://i.loli.net/2021/05/22/yt5sCNoaPfr7IYU.png" ></a>
+
+5. 可以读取、下载对应的url资源：
+
+   ```java
+   public class URLTest {
+   
+       public static void main(String[] args) {
+   
+           try {
+   
+               URL url = new URL("http://localhost:8080/examples/beauty.jpg?username=Tom");
+   
+   //            public String getProtocol(  )     获取该URL的协议名
+               System.out.println(url.getProtocol());
+   //            public String getHost(  )           获取该URL的主机名
+               System.out.println(url.getHost());
+   //            public String getPort(  )            获取该URL的端口号
+               System.out.println(url.getPort());
+   //            public String getPath(  )           获取该URL的文件路径
+               System.out.println(url.getPath());
+   //            public String getFile(  )             获取该URL的文件名
+               System.out.println(url.getFile());
+   //            public String getQuery(   )        获取该URL的查询名
+               System.out.println(url.getQuery());
+   
+   
+   
+   
+           } catch (MalformedURLException e) {
+               e.printStackTrace();
+           }
+   
+       }
+   
+   
+   }
+   ```
+
+   ```java
+   public class URLTest1 {
+   
+       public static void main(String[] args) {
+   
+           HttpURLConnection urlConnection = null;
+           InputStream is = null;
+           FileOutputStream fos = null;
+           try {
+               URL url = new URL("http://localhost:8080/examples/beauty.jpg");
+   
+               urlConnection = (HttpURLConnection) url.openConnection();
+   
+               urlConnection.connect();
+   
+               is = urlConnection.getInputStream();
+               fos = new FileOutputStream("day10\\beauty3.jpg");
+   
+               byte[] buffer = new byte[1024];
+               int len;
+               while((len = is.read(buffer)) != -1){
+                   fos.write(buffer,0,len);
+               }
+   
+               System.out.println("下载完成");
+           } catch (IOException e) {
+               e.printStackTrace();
+           } finally {
+               //关闭资源
+               if(is != null){
+                   try {
+                       is.close();
+                   } catch (IOException e) {
+                       e.printStackTrace();
+                   }
+               }
+               if(fos != null){
+                   try {
+                       fos.close();
+                   } catch (IOException e) {
+                       e.printStackTrace();
+                   }
+               }
+               if(urlConnection != null){
+                   urlConnection.disconnect();
+               }
+           }
+   
+       }
+   }
+   ```
+
+   
+
+
+
+​				
 

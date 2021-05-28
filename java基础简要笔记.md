@@ -1,23 +1,190 @@
-# 一、基本数据类型之间的运算规则
+# 一、基本语法
 
-1、自动类型提升
+## 关键字与标识符
 
-​	结论：当容量小的数据类型的变量与容量大的数据类型的变量做运算时，结果自动提升为容量大的数据类型。
+1. java关键字的使用
 
-> byte、char、short--->int---->long---->float----->double
->
-> 特别的：当byte、char、short三种类型的变量做运算时，结果为int型
+   定义：被Java语言赋予了特殊含义，用做专门用途的字符串（单词）
 
-2、强制类型转换
+   特点：关键字中所字母都为小写
 
-​	自动类型提升运算的逆运算。
+   具体哪些关键字：
 
-* 需要使用强转符：（）
-* 注意点：强制类型转换，可能导致精度缺失。
+   <a href="https://sm.ms/image/SDQAYORHJgvMCFd" target="_blank"><img src="https://i.loli.net/2021/05/27/SDQAYORHJgvMCFd.png" ></a>
 
-==注== 整型常量，默认为int类型      
+   <a href="https://sm.ms/image/WEBZUP15btghmvK" target="_blank"><img src="https://i.loli.net/2021/05/27/WEBZUP15btghmvK.png" ></a>
 
-​		浮点型常量，默认类型为double型
+2. 保留字：现Java版本尚未使用，但以后版本可能会作为关键字使用。
+
+   1. 具体哪些保留字：goto 、const
+   2. 注意：自己命名标识符时要避免使用这些保留字
+
+3. 标识符的使用
+
+   定义：凡是自己可以起名字的地方都叫标识符。
+
+   涉及到的结构：
+
+   包名、类名、接口名、变量名、方法名、常量名
+   规则：(必须要遵守。否则，编译不通过)
+
+   <a href="https://sm.ms/image/PCaueHFhJ24BoQ9" target="_blank"><img src="https://i.loli.net/2021/05/27/PCaueHFhJ24BoQ9.png" ></a>
+
+   规范：（可以不遵守，不影响编译和运行。但是要求大家遵守）
+
+   <a href="https://sm.ms/image/GW6mENqgvYex4T8" target="_blank"><img src="https://i.loli.net/2021/05/27/GW6mENqgvYex4T8.png" ></a>
+
+   
+
+   注意点： 
+   在起名字时，为了提高阅读性，要尽量意义，“见名知意”。
+
+
+
+## 变量的使用
+
+1. 变量的分类
+
+   <a href="https://sm.ms/image/BmTgjMd1q5Ytcz7" target="_blank"><img src="https://i.loli.net/2021/05/27/BmTgjMd1q5Ytcz7.png" ></a>
+
+   > 详细说明：
+   > //1. 整型：byte(1字节=8bit) \ short(2字节) \ int(4字节) \ long(8字节)
+   > 		//① byte范围：-128 ~ 127
+   > 	// ② 声明long型变量，必须以"l"或"L"结尾
+   > 		// ③ 通常，定义整型变量时，使用int型。
+   >        //④整型的常量，默认类型是：int型
+   > //2. 浮点型：float(4字节) \ double(8字节)
+   > 		//① 浮点型，表示带小数点的数值
+   > 		//② float表示数值的范围比long还大
+   > 	//③ 定义float类型变量时，变量要以"f"或"F"结尾
+   > 	//④ 通常，定义浮点型变量时，使用double型。
+   > 	//⑤ 浮点型的常量，默认类型为：double
+   > //3. 字符型：char (1字符=2字节)
+   > 		//① 定义char型变量，通常使用一对'',内部只能写一个字符
+   > 	//② 表示方式：1.声明一个字符 2.转义字符 3.直接使用 Unicode 值来表示字符型常量
+   > //4.布尔型：boolean
+   > 	//① 只能取两个值之一：true 、 false
+   > 	//② 常常在条件判断、循环结构中使用
+
+2. 按声明的位置分类
+
+   <a href="https://sm.ms/image/g916FxW2uM7lRBD" target="_blank"><img src="https://i.loli.net/2021/05/27/g916FxW2uM7lRBD.png" ></a>
+
+3. 定义变量的格式：
+
+   > 数据类型  变量名 = 变量值;
+   > 或
+   > 数据类型  变量名;
+   > 变量名 = 变量值;
+
+4. 变量使用的注意点：
+
+   >    ① 变量必须先声明，后使用
+   >    ② 变量都定义在其作用域内。在作用域内，它是有效的。换句话说，出了作用域，就失效了
+   >    ③ 同一个作用域内，不可以声明两个同名的变量
+
+5. 基本数据类型变量间运算规则
+
+   1. 涉及到的基本数据类型：除了boolean之外的其他7种
+
+   2. 自动类型转换(只涉及7种基本数据类型）
+
+      ​	结论：当容量小的数据类型的变量与容量大的数据类型的变量做运算时，结果自动提升为容量大的数据类型。
+
+      > byte、char、short--->int---->long---->float----->double
+      >
+      > 特别的：当byte、char、short三种类型的变量做运算时，结果为int型
+
+      说明：此时的容量大小指的是，表示数的范围的大和小。比如：float容量要大于long的容量
+
+   3. 强制类型转换
+
+      自动类型提升运算的逆运算。
+
+      * 需要使用强转符：（）
+      * 注意点：强制类型转换，可能导致精度缺失。
+
+      ==注== 整型常量，默认为int类型      
+
+      ​		浮点型常量，默认类型为double型
+
+   4. String与8种基本数据类型间的运算
+
+      > 1. String属于引用数据类型,翻译为：字符串
+      > 2. 声明String类型变量时，使用一对""
+      > 3. String可以和8种基本数据类型变量做运算，且运算只能是连接运算：+
+      > 4. 运算的结果仍然是String类型
+
+## 运算符
+
+1. 算术运算符：+ - * / % (前)++ (后)++ (前)-- (后)--
+
+2. 赋值运算符：= += -= *= /= %=
+
+3. 比较运算符（关系运算符）：== != >  <  >=  <=  instanceof
+
+4. 逻辑运算符：& &&  |  || !  ^
+
+   > 		//区分& 与 &&
+   > 		//相同点1：& 与  && 的运算结果相同
+   > 		//相同点2：当符号左边是true时，二者都会执行符号右边的运算
+   > 		//不同点：当符号左边是false时，&继续执行符号右边的运算。&&不再执行符号右边的运算。
+   > 		//开发中，推荐使用&&
+   > 		
+
+   > 		// 区分：| 与 || 
+   > 		//相同点1：| 与  || 的运算结果相同
+   > 		//相同点2：当符号左边是false时，二者都会执行符号右边的运算
+   > 		//不同点3：当符号左边是true时，|继续执行符号右边的运算，而||不再执行符号右边的运算
+   > 		//开发中，推荐使用||
+
+   逻辑运算符操作的都是boolean类型的变量。而且结果也是boolean类型
+
+5. 位运算符：<<  >>  &  |  ^  ~
+
+   ```java
+   int i = 21;
+   i = -21;
+   System.out.println("i << 2 :" + (i << 2));
+   System.out.println("i << 3 :" + (i << 3));
+   System.out.println("i << 27 :" + (i << 27));
+   
+   int m = 12;
+   int n = 5;
+   System.out.println("m & n :" + (m & n));
+   System.out.println("m | n :" + (m | n));
+   System.out.println("m ^ n :" + (m ^ n));
+   ```
+
+   面试题
+
+   你能否写出最高效的2 * 8的实现方式？ 
+
+   > 答案：2 << 3  或  8 << 1
+
+   特别说明的
+
+   > 1. 位运算符操作的都是整型的数据
+   >
+   > 2. << ：在一定范围内，每向左移1位，相当于 * 2
+   >    
+   >    \>>:在一定范围内，每向右移1位，相当于 / 2
+
+6. 三元运算符：(条件表达式)? 表达式1 : 表达式2
+
+   > 1. 说明
+   > ① 条件表达式的结果为boolean类型
+   > ② 根据条件表达式真或假，决定执行表达式1，还是表达式2.
+   >   如果表达式为true，则执行表达式1。
+   >   如果表达式为false，则执行表达式2。
+   > ③ 表达式1 和表达式2要求是一致的。
+   > ④ 三元运算符可以嵌套使用
+   > 2. 
+   > 凡是可以使用三元运算符的地方，都可以改写为if-else
+   > 反之，不成立。
+   > 3. 如果程序既可以使用三元运算符，又可以使用if-else结构，那么优先选择三元运算符。原因：简洁、执行效率高。
+
+
 
 # 二、进制
 
@@ -11213,4 +11380,1498 @@ public class WordCount {
 
 
 ​				
+
+# 十五、java反射机制
+
+## 反射的概述
+
+1. Reflection（反射）是被视为动态语言的关键，反射机制允许程序在执行期借助于Reflection API取得任何类的内部信息，并能直接操作任意对象的内部属性及方法。
+
+   框架=反射+注解+设计模式
+
+2. 体会反射机制的“动态性”
+
+   ```java
+   //体会反射的动态性
+       @Test
+       public void test2(){
+   
+           for(int i = 0;i < 100;i++){
+               int num = new Random().nextInt(3);//0,1,2
+               String classPath = "";
+               switch(num){
+                   case 0:
+                       classPath = "java.util.Date";
+                       break;
+                   case 1:
+                       classPath = "java.lang.Object";
+                       break;
+                   case 2:
+                       classPath = "com.atguigu.java.Person";
+                       break;
+               }
+   
+               try {
+                   Object obj = getInstance(classPath);
+                   System.out.println(obj);
+               } catch (Exception e) {
+                   e.printStackTrace();
+               }
+           }
+   
+   
+   
+       }
+   
+       /*
+       创建一个指定类的对象。
+       classPath:指定类的全类名
+        */
+       public Object getInstance(String classPath) throws Exception {
+          Class clazz =  Class.forName(classPath);
+          return clazz.newInstance();
+       }
+   
+   }
+   ```
+
+3. 反射机制能提供的功能
+
+   * 在运行时判断任意一个对象所属的类
+   * 在运行时构造任意一个类的对象
+   * 在运行时判断任意一个类所具有的成员变量和方法
+   * 在运行时获取泛型信息
+   * 在运行时调用任意一个对象的成员变量和方法
+   * 在运行时处理注解
+   * 生成动态代理
+
+4. 相关API
+
+   java.lang.Class:反射的源头
+
+   java.lang.reflect.Method
+
+   java.lang.reflect.Field
+
+   java.lang.reflect.Constructor
+
+   .....
+
+## Class类的理解与获取Class的实例
+
+### 关于java.lang.Class类的理解
+
+1. 类的加载过程：
+   程序经过javac.exe命令以后，会生成一个或多个字节码文件（.class结尾），接着我们使用java.exe命令对某个字节码文件进行解释运行。相当于将某个字节码文件加载到内存中。此过程就称为类的加载。加载到内存中的类，我们就称为运行时类，此运行时类，就作为Class的一个实例。
+2. 换句话说，Class的实例就对应这一个运行时类。
+3. 加载到内存中的运行时类，会缓存一定的时间。在此时间之内，我们可以通过不同的方式来获取此运行时类。
+
+### 获取Class实例的几种方式（前三种方式需要掌握）
+
+```java
+//方式一：调用运行时类的属性：.class
+Class clazz1=Person.class;
+System.out.println(clazz1);
+//方式二：通过运行时类的对象，调用getClass()
+Person p1=new Person();
+Class clazz2=p1.getClass();
+System.out.println(clazz2);
+//方式三：调用Class的静态方法：forName(String classPath)
+Class clazz3=Class.forName("com.atguigu.java.Person");
+//clazz3 = Class.forName("java.lang.String");
+System.out.println(clazz3);
+System.out.println(clazz1 == clazz2); //true
+System.out.println(clazz1 == clazz3);//true
+//方式四：使用类的加载器：ClassLoader（了解）
+ClassLoader classLoader=ReflectionTest.Class.getClassLoader();  //ReflectionTest为当前类
+Class clazz4=ClassLoader.loderClass("com.atguigu.java.Person");
+System.out.println(clazz4);
+System.out.println(clazz1 == clazz4);//true
+```
+
+
+
+### 总结
+
+1. 创建类的对象的方式？
+   方式一：new+构造器
+
+   方式二：要创建Xxx类的对象，可以考虑：Xxx、Xxxs、XxxFactory、XxxBuilder类中查看是否有静态方法的存在。可以调用其静态方法Xxx对象。
+
+   方式三：通过反射
+
+2. Class实例可以是那些结构的说明
+
+   * class: 外部类，成员（成员内部类，静态内部类），局部内部类，匿名内部类
+   * interface：接口
+   * []:数组
+   * enum：枚举
+   * annotation：注解@interface
+   * primitive type:基本数据类型
+   * void
+
+
+
+## 了解ClassLoader
+
+1. 类的加载过程-------了解
+
+   <a href="https://sm.ms/image/T9bLFf3wxW7IhJi" target="_blank"><img src="https://i.loli.net/2021/05/26/T9bLFf3wxW7IhJi.png" ></a>
+
+   
+
+2. 类的加载器的作用
+
+   * 类加载的作用：将class文件字节码内容加载到内存中，并将这些静态数据转换成方法区的运行时数据结构，然后再堆中生成一个代表这个类的java.lang.Class对象，作为方法区中类数据的访问入口。
+   * 类缓存：标准的JavaSE类加载器可以按要求查找类，但一旦某个类被加载到类加载器中，它将维持加载（缓存）一段时间。不过JVM垃圾回收机制可以回收这些Class对象。
+
+3. 类的加载器的分类
+
+   
+
+<a href="https://sm.ms/image/6ayZeVFmLdDJrl7" target="_blank"><img src="https://i.loli.net/2021/05/26/6ayZeVFmLdDJrl7.png" ></a>
+
+
+
+```java
+public class ClassLoaderTest {
+
+    @Test
+    public void test1(){
+        //对于自定义类，使用系统类加载器进行加载
+        ClassLoader classLoader = ClassLoaderTest.class.getClassLoader();
+        System.out.println(classLoader);
+        //调用系统类加载器的getParent()：获取扩展类加载器
+        ClassLoader classLoader1 = classLoader.getParent();
+        System.out.println(classLoader1);
+        //调用扩展类加载器的getParent()：无法获取引导类加载器
+        //引导类加载器主要负责加载java的核心类库，无法加载自定义类的。
+        ClassLoader classLoader2 = classLoader1.getParent();
+        System.out.println(classLoader2);
+
+        ClassLoader classLoader3 = String.class.getClassLoader();
+        System.out.println(classLoader3);
+
+    }
+```
+
+
+
+4. Java类的编译、运行的执行的流程
+
+   <a href="https://sm.ms/image/CLWEzbq7sxjAhaD" target="_blank"><img src="https://i.loli.net/2021/05/26/CLWEzbq7sxjAhaD.png" ></a>
+
+5. 使用Classloader加载src目录下的配置文件
+
+   ```java
+   /*
+       Properties：用来读取配置文件。
+   
+        */
+       @Test
+       public void test2() throws Exception {
+   
+           Properties pros =  new Properties();
+           //此时的文件默认在当前的module下。
+           //读取配置文件的方式一：
+   //        FileInputStream fis = new FileInputStream("jdbc.properties");
+   //        FileInputStream fis = new FileInputStream("src\\jdbc1.properties");
+   //        pros.load(fis);
+   
+           //读取配置文件的方式二：使用ClassLoader
+           //配置文件默认识别为：当前module的src下
+           ClassLoader classLoader = ClassLoaderTest.class.getClassLoader();
+           InputStream is = classLoader.getResourceAsStream("jdbc1.properties");
+           pros.load(is);
+   
+   
+           String user = pros.getProperty("user");
+           String password = pros.getProperty("password");
+           System.out.println("user = " + user + ",password = " + password);
+   
+   
+   
+       }
+   ```
+
+   
+
+## 反射应用一：创建运行时类的对象
+
+1. 代码举例
+
+   ```java
+   Class<Person> clazz=Person.class;
+   Person obj=class.newInstance();
+   System.out.println(obj);
+   ```
+
+2. 说明
+
+   newInstance():调用此方法，创建对应的运行时类的对象。内部调用了运行时类的空参构造器。
+
+   要想此方法正常的创建运行时类的对象，要求：
+
+   * 运行时类必须提供空参的构造器
+   * 空参的构造器的访问权限的够。通常，设置为public。
+
+   在javabean中要求提供一个public的空参构造器。原因：
+
+   * 便于通过反射，创建运行时类的对象
+   * 便于子类继承此运行时类时，默认调用super()时，保证父类有此构造器
+
+
+
+## 反射应用二：获取运行时类的完整结构
+
+我们可以通过反射，获取对应的运行时类中所有的属性、方法、构造器、父类、接口、父类的泛型、包、注解、异常。。。。
+
+```java
+@Test
+    public void test1(){
+
+        Class clazz = Person.class;
+
+        //获取属性结构
+        //getFields():获取当前运行时类及其父类中声明为public访问权限的属性
+        Field[] fields = clazz.getFields();
+        for(Field f : fields){
+            System.out.println(f);
+        }
+        System.out.println();
+
+        //getDeclaredFields():获取当前运行时类中声明的所有属性。（不包含父类中声明的属性）
+        Field[] declaredFields = clazz.getDeclaredFields();
+        for(Field f : declaredFields){
+            System.out.println(f);
+        }
+    }
+```
+
+```java
+ @Test
+    public void test1(){
+
+        Class clazz = Person.class;
+
+        //getMethods():获取当前运行时类及其所有父类中声明为public权限的方法
+        Method[] methods = clazz.getMethods();
+        for(Method m : methods){
+            System.out.println(m);
+        }
+        System.out.println();
+        //getDeclaredMethods():获取当前运行时类中声明的所有方法。（不包含父类中声明的方法）
+        Method[] declaredMethods = clazz.getDeclaredMethods();
+        for(Method m : declaredMethods){
+            System.out.println(m);
+        }
+    }
+```
+
+```java
+public class OtherTest {
+
+    /*
+    获取构造器结构
+
+     */
+    @Test
+    public void test1(){
+
+        Class clazz = Person.class;
+        //getConstructors():获取当前运行时类中声明为public的构造器
+        Constructor[] constructors = clazz.getConstructors();
+        for(Constructor c : constructors){
+            System.out.println(c);
+        }
+
+        System.out.println();
+        //getDeclaredConstructors():获取当前运行时类中声明的所有的构造器
+        Constructor[] declaredConstructors = clazz.getDeclaredConstructors();
+        for(Constructor c : declaredConstructors){
+            System.out.println(c);
+        }
+
+    }
+
+    /*
+    获取运行时类的父类
+
+     */
+    @Test
+    public void test2(){
+        Class clazz = Person.class;
+
+        Class superclass = clazz.getSuperclass();
+        System.out.println(superclass);
+    }
+
+    /*
+    获取运行时类的带泛型的父类
+
+     */
+    @Test
+    public void test3(){
+        Class clazz = Person.class;
+
+        Type genericSuperclass = clazz.getGenericSuperclass();
+        System.out.println(genericSuperclass);
+    }
+
+    /*
+    获取运行时类的带泛型的父类的泛型
+
+
+    代码：逻辑性代码  vs 功能性代码
+     */
+    @Test
+    public void test4(){
+        Class clazz = Person.class;
+
+        Type genericSuperclass = clazz.getGenericSuperclass();
+        ParameterizedType paramType = (ParameterizedType) genericSuperclass;
+        //获取泛型类型
+        Type[] actualTypeArguments = paramType.getActualTypeArguments();
+//        System.out.println(actualTypeArguments[0].getTypeName());
+        System.out.println(((Class)actualTypeArguments[0]).getName());
+    }
+
+    /*
+    获取运行时类实现的接口
+     */
+    @Test
+    public void test5(){
+        Class clazz = Person.class;
+
+        Class[] interfaces = clazz.getInterfaces();
+        for(Class c : interfaces){
+            System.out.println(c);
+        }
+
+        System.out.println();
+        //获取运行时类的父类实现的接口
+        Class[] interfaces1 = clazz.getSuperclass().getInterfaces();
+        for(Class c : interfaces1){
+            System.out.println(c);
+        }
+
+    }
+    /*
+        获取运行时类所在的包
+
+     */
+    @Test
+    public void test6(){
+        Class clazz = Person.class;
+
+        Package pack = clazz.getPackage();
+        System.out.println(pack);
+    }
+
+    /*
+        获取运行时类声明的注解
+
+     */
+    @Test
+    public void test7(){
+        Class clazz = Person.class;
+
+        Annotation[] annotations = clazz.getAnnotations();
+        for(Annotation annos : annotations){
+            System.out.println(annos);
+        }
+    }
+
+}
+```
+
+
+
+## 反射应用三：调用运行时类的指定结构
+
+ ### 调用指定的属性：
+
+```java
+ /*
+
+        不需要掌握
+     */
+    @Test
+    public void testField() throws Exception {
+        Class clazz = Person.class;
+
+        //创建运行时类的对象
+        Person p = (Person) clazz.newInstance();
+
+
+        //获取指定的属性：要求运行时类中属性声明为public
+        //通常不采用此方法
+        Field id = clazz.getField("id");
+
+        /*
+        设置当前属性的值
+
+        set():参数1：指明设置哪个对象的属性   参数2：将此属性值设置为多少
+         */
+
+        id.set(p,1001);
+
+        /*
+        获取当前属性的值
+        get():参数1：获取哪个对象的当前属性值
+         */
+        int pId = (int) id.get(p);
+        System.out.println(pId);
+
+
+    }
+```
+
+```java
+	/*
+    如何操作运行时类中的指定的属性 -- 需要掌握
+     */
+@Test
+public void testField1() throws Excepion{
+    Class clazz=Person.class;
+    //创建运行时类的对象
+    Person p=(Person) clazz.newInstance();
+    //1.getDeclaredFiled(String fieldName):获取运行时类中指定变量名的属性
+    Field name=clazz.getDeclaredFiled("name");
+    //2.保证当前属性是可访问的
+    name.setAccessible(true);
+    //3.获取、设置指定对象的此属性值
+    name.set(p,"Tom");
+    System.out.println(name.get(p));
+    
+}
+```
+
+
+
+### 调用指定的方法
+
+```java
+@Test
+public void testMethod() throws Exception{
+    Class clazz=Person.class;
+    //创建运行时类的对象
+    Person p=(Person)  clazz.newInstance();
+    //1.获取指定的某个方法
+    //getDeclaredMethod():参数1：指明获取的方法的名称  参数2：指明获取的方法的形参列表
+    Method show=clazz.getDeclaredMethod("show",String.class);
+    //2.保证当前方法时可访问的
+    show.setAccessible(true);
+    
+    //3.调用方法的invoke():参数1：方法的调用者，参数2：给方法形参赋值的实参
+    //invoke()的返回值即为对应类中调用的方法的返回值。
+    Object returnValue = show.invoke(p,"CHN"); //String nation = p.show("CHN");
+    System.out.println(returnValue);
+    System.out.println("*************如何调用静态方法*****************");
+    // private static void showDesc()
+
+        Method showDesc = clazz.getDeclaredMethod("showDesc");
+        showDesc.setAccessible(true);
+        //如果调用的运行时类中的方法没有返回值，则此invoke()返回null
+//        Object returnVal = showDesc.invoke(null);
+        Object returnVal = showDesc.invoke(Person.class);
+        System.out.println(returnVal);//null
+
+    
+    
+}
+```
+
+
+
+### 调用指定的构造器
+
+```java
+ /*
+    如何调用运行时类中的指定的构造器
+     */
+    @Test
+    public void testConstructor() throws Exception {
+        Class clazz = Person.class;
+
+        //private Person(String name)
+        /*
+        1.获取指定的构造器
+        getDeclaredConstructor():参数：指明构造器的参数列表
+         */
+
+        Constructor constructor = clazz.getDeclaredConstructor(String.class);
+
+        //2.保证此构造器是可访问的
+        constructor.setAccessible(true);
+
+        //3.调用此构造器创建运行时类的对象
+        Person per = (Person) constructor.newInstance("Tom");
+        System.out.println(per);
+
+    }
+```
+
+
+
+## 反射应用四：动态代理和静态代理
+
+1. 代理模式的原理：
+
+   使用一个代理将对象包装起来，然后用该代理对象取代原始对象。任何对原始对象的调用都要通过代理。代理对象决定是否以及何时将方法调用转到原始对象上。
+
+2. 静态代理：特点   代理类和被代理类在编译期间，就确定下来了
+
+   1. 举例：实现Runnable接口的方法创建多线程。
+
+      ```java
+      Class MyThread implements Runnable{}//相当于被代理类
+      Class Thread implements Runnable{}//相当于代理类
+      main(){
+          MyThread t=new Mythread();
+          Thread thread=new Thread(t);
+          thread.start();//启动线程；调用线程的run()
+      }
+      ```
+
+   2. 举例 
+
+      ```java
+      interface ClothFactory{
+          void produceCloth();
+      }
+      
+      //被代理类
+      class NikeClothFactory implements ClothFactory{
+          @Override 
+          public void produceCloth(){
+              System.out.println("Nike工厂生产一批运动服");
+          }
+      }
+      
+      //代理类
+      class ProxyClothFactory implements ClothFactory{
+          private ClothFactory factory;//用被代理类对象进行实例化
+          public ProxyClothFactory(ClothFactory factory){
+              this.factory=factory;
+          }
+           @Override
+          public void produceCloth(){
+              System.out.println("代理工程做一些准备工作");
+              factory.produceCloth();
+              System.out.println("代理工厂做一些后续的收尾工作");
+          }
+          
+          public class StaticProxyTest{
+              public static void main(String [] args){
+                  //创建被代理的对象
+                  ClothFactory nike=new NikeClothFactory();
+                  //创建代理类的对象
+                  ClothFactory ProxyClothFactory=new ProxyClothFactory(nike);
+                  ProxyClothFactory.produceCloth();
+              }
+          }
+          
+      }
+      ```
+
+3. 静态代理的缺点
+
+   1. 代理类和目标对象的类都是在编译期间确定下来，不利于程序的扩展。
+   2. 每一个代理类只能为一个接口服务，这样一来程序开发中必然产生过多的代理。
+
+4. 动态代理的特点
+
+   动态代理是指客户通过代理类来调用其他对象的方法，并且是在程序运行时根据需要动态创建目标类的代理对象。
+
+5. 动态代理的实现
+
+   1. 需要解决的两个主要问题：
+
+      * 问题一：如何根据加载到内存中的被代理类，动态的创建一个代理类及其对象
+
+        （通过Proxy.newProxyInstance()实现）
+
+      * 问题二：当通过代理类的对象调用方法a时，如何动态的去调用被代理类中的同名方法a。
+
+        （通过InvocationHandler接口的实现类及其方法invoke（））
+
+6. 动态代码举例代码实现：
+
+   ```java
+   interface Human{
+       String getBelief();
+       void eat(String food);
+   }
+   
+   //被代理类
+   class SuperMan implements Human{
+       @Override
+       public String getBelief(){
+           return "I belive I can fly!";
+       }
+       @Override
+       public void eat(String food){
+           System.out.println("我喜欢吃"+food);
+       }
+   }
+   class HumanUtil{
+       public void method1(){
+           System.out.println("====================通用方法一====================");
+       }
+   	public void method2(){
+           System.out.println("====================通用方法二====================");
+       }
+   }
+   
+
+   //代理类
+   class ProxyFactory{
+       //调用此方法，返回一个代理类的对象。解决问题一
+       public static Object getProxyInstance(Object obj){ //被代理类对象
+           MyInvocationHandler handler=new MyInvocationHandler();
+           handler.bind(obj);
+           return Proxy.newProxyInstance(obj.getClass().getClassLoder(),obj.getClass().getInterface(),handler);
+       }
+   }
+   
+   class MyInvocationHandler implements InvocationHandler{
+       private Object obj;//需要使用被代理类的对象进行赋值
+       public void bind(Object obj){
+           this.obj=obj;
+       }
+       //当我们通过代理类的对象，调用方法a时，就会自动的调用如下的方法：invoke()
+       //将被代理类要执行的方法a的功能就声明在invoke()中
+       @Override
+       public Object invoke(Object proxy,Method method,Object[] args) throws Throwable{
+           HumanUtil util =new HumanUtil();
+           util.method1();
+           //method：即为代理类的对象调用的方法，此方法也就作为了被代理类对象要调用的方法
+           //Obj:被代理类的对象
+           Object returnValue=method.invoke(obj,args);
+           util.method2();
+           //上述方法的返回值就作为当前类中的invoke()的返回值。
+           return returnValue;
+       }
+       
+   }
+   public class ProxyTest{
+       public static void main(String[] args){
+           SuperMan superMan=new SuperMan();
+           //proxyInstance:代理类的对象
+           Human proxyInstance =(Human)ProxyFactory.getProxyInstance(superman);
+           //当通过代理类对象调用方法时，会自动的调用被代理类中同名的方法
+           String belief=proxyInstance.getBlief();
+           System.out.println(belief);
+           proxyInstance.eat("四川麻辣烫");
+           System.out.println("*******************************");
+           
+           NikeClothFactory nikeClothFactory=new NikeClothFactory();
+           ClothFactory proxyClothFactory=(ClothFactory)ProxyFactory.getProxyInstance(nikeClothFactory);
+           proxyClothFactory.produceCloth();
+           
+       }
+   }
+   ```
+   
+   体会：反射的动态性
+
+# 十六、java8的其它新特性
+
+## java8新特性概述
+
+<a href="https://sm.ms/image/5CtscyBZ89jbSnK" target="_blank"><img src="https://i.loli.net/2021/05/27/5CtscyBZ89jbSnK.png" ></a>
+
+
+
+
+
+
+<a href="https://sm.ms/image/azeSN4ROL1Muc2V" target="_blank"><img src="https://i.loli.net/2021/05/27/azeSN4ROL1Muc2V.png" ></a>
+
+
+
+## Lambda表达式使用前后的对比：
+
+1. 举例一：
+
+   ```java
+   
+   @Test
+   public void test1(){
+   
+       Runnable r1 = new Runnable() {
+           @Override
+           public void run() {
+               System.out.println("我爱北京天安门");
+           }
+       };
+       r1.run();
+   
+       System.out.println("***********************");
+       
+       Runnable r2=()->System.out.println("我爱北京故宫");
+       r2.run();
+   }
+   
+   ```
+
+2. 举例二：
+
+   ```java
+   @Test
+   public void test2(){
+   
+       Comparator<Integer> com1 = new Comparator<Integer>() {
+           @Override
+           public int compare(Integer o1, Integer o2) {
+               return Integer.compare(o1,o2);
+           }
+       };
+   
+       int compare1 = com1.compare(12,21);
+       System.out.println(compare1);
+   
+       System.out.println("***********************");
+       //Lambda表达式的写法
+       Comparator<Integer> com2 = (o1,o2) -> Integer.compare(o1,o2);
+   
+       int compare2 = com2.compare(32,21);
+       System.out.println(compare2);
+   
+   
+       System.out.println("***********************");
+       //方法引用
+       Comparator<Integer> com3 = Integer :: compare;
+   
+       int compare3 = com3.compare(32,21);
+       System.out.println(compare3);
+   }
+   ```
+
+3. Lambda表达式的基本语法：
+
+   1. 举例：（o1,o2）-> Integer.compare(o1,o2);
+
+   2. 格式：
+
+      ->：lambda操作符 或 箭头操作符
+
+      -> 左边：lambda形参列表（其实就是接口中的抽象方法的形参列表）
+
+      ->右边：lambda体（其实就是重写的抽象方法的方法体）
+
+   3. 如何使用分为六种情况
+
+      <a href="https://sm.ms/image/k7yIcrJCSpji9uE" target="_blank"><img src="https://i.loli.net/2021/05/27/k7yIcrJCSpji9uE.png" ></a>
+
+      <a href="https://sm.ms/image/rgzBZ72AFkP1Ob9" target="_blank"><img src="https://i.loli.net/2021/05/27/rgzBZ72AFkP1Ob9.png" ></a>
+
+      
+
+ 4. 总结六种情况：
+
+    ->左边：lambda形参列表的参数类型可以省略（类型推断）；如果lambda形参列表只一个参数，其一对()也可以省略
+
+    ->右边：lambda体应该使用一对{}包裹；如果lambda体只一条执行语句（可能是return语句，省略这一对{}和return关键字
+
+
+
+## 函数式接口
+
+1. 函数式接口的使用说明
+
+   * 如果一个接口中，只声明了一个抽象方法，则此接口就称为函数式接口。
+
+   * 我们可以在一个接口上使用 @FunctionalInterface 注解，这样做可以检查它是否是一个函数式接口。
+
+   * Lambda表达式的本质：作为函数式接口的实例
+
+2. Java8中关于Lambda表达式提供的4个基本的函数式接口：
+
+   具体使用：
+
+   <a href="https://sm.ms/image/IlZsaTAqnoKvcr8" target="_blank"><img src="https://i.loli.net/2021/05/27/IlZsaTAqnoKvcr8.png" ></a>
+
+3. 总结
+
+   1. 何时使用lambda表达式？
+
+      当需要对一个函数式接口实例化的时候，可以使用lambda表达式。
+
+   2. 如何使用给定的函数式接口？
+
+      如果我们开发中需要定义一个函数式接口，首先看看在已有的jdk提供的函数式接口是否提供了能满足需求的函数式接口。如果有，则直接调用即可，不需要自己在自定义了。
+
+
+
+## 方法引用
+
+1. 理解：
+
+   方法引用可以看做是Lambda表达式深层次的表达。换句话说，方法引用就是Lambda表达式，也就是函数式接口的一个实例，通过方法的名字来指向一个方法。
+
+2. 使用情境：
+
+   当要传递给Lambda体的操作，已经实现的方法了，可以使用方法引用！
+
+3. 格式：
+
+   类（或对象）：：方法名
+
+4. 分为如下的三种情况：
+
+   *    情况1     对象 :: 非静态方法
+   *    情况2     类 :: 静态方法
+   *    情况3     类 :: 非静态方法
+
+5. 要求：
+
+   1. 要求接口中的抽象方法的形参列表和返回值类型与方法引用的方法的形参列表和返回值类型相同！（针对于情况1和情况2）
+   2. 当函数式接口方法的第一个参数是需要引用方法的调用者，并且第二个参数是需要引用方法的参数(或无参数)时：ClassName::methodName（针对于情况3）
+
+6. 使用建议：
+
+   如果给函数式接口提供实例，恰好满足方法引用的使用情境，大家就可以考虑使用方法引用给函数式接口提供实例。如果大家不熟悉方法引用，那么还可以使用lambda表达式。
+
+7. 使用举例：
+
+   ```java
+   // 情况一：对象 :: 实例方法
+   //Consumer中的void accept(T t)
+   //PrintStream中的void println(T t)
+   @Test
+   public void test1(){
+       Consumer<String> con1=Str -> System.out.println(Str);
+       con1.accept("北京");
+       System.out.println("*******************");
+       PrintStream ps =System.out;
+       Consumer<String> con2=ps::println;
+       con2.accept("beijing");
+   }
+   ```
+
+   ```java
+   
+   //Supplier中的T get()
+   //Employee中的String getName()
+   @Test
+   public void test2() {
+       	Employee emp = new Employee(1001,"Tom",23,5600);
+   
+   	Supplier<String> sup1 = () -> emp.getName();
+   	System.out.println(sup1.get());
+   
+   	System.out.println("*******************");
+   	Supplier<String> sup2 = emp::getName;
+   	System.out.println(sup2.get());
+   
+   }
+   ```
+
+   ```java
+   // 情况二：类 :: 静态方法
+   //Comparator中的int compare(T t1,T t2)
+   //Integer中的int compare(T t1,T t2)
+   @Test
+   public void test3() {
+   	Comparator<Integer> com1 = (t1,t2) -> Integer.compare(t1,t2);
+   	System.out.println(com1.compare(12,21));
+   
+   	System.out.println("*******************");
+   
+   	Comparator<Integer> com2 = Integer::compare;
+   	System.out.println(com2.compare(12,3));
+   
+   }
+   
+   //Function中的R apply(T t)
+   //Math中的Long round(Double d)
+   @Test
+   public void test4() {
+   	Function<Double,Long> func = new Function<Double, Long>() {
+   		@Override
+   		public Long apply(Double d) {
+   			return Math.round(d);
+   		}
+   	};
+   
+   	System.out.println("*******************");
+   
+   	Function<Double,Long> func1 = d -> Math.round(d);
+   	System.out.println(func1.apply(12.3));
+   
+   	System.out.println("*******************");
+   
+   	Function<Double,Long> func2 = Math::round;
+   	System.out.println(func2.apply(12.6));
+   }
+   ```
+
+   ```java
+   // 情况：类 :: 实例方法  (难度)
+   // Comparator中的int comapre(T t1,T t2)
+   // String中的int t1.compareTo(t2)
+   @Test
+   public void test5() {
+   	Comparator<String> com1 = (s1,s2) -> s1.compareTo(s2);
+   	System.out.println(com1.compare("abc","abd"));
+   
+   	System.out.println("*******************");
+   
+   	Comparator<String> com2 = String :: compareTo;
+   	System.out.println(com2.compare("abd","abm"));
+   }
+   
+   //BiPredicate中的boolean test(T t1, T t2);
+   //String中的boolean t1.equals(t2)
+   @Test
+   public void test6() {
+   	BiPredicate<String,String> pre1 = (s1,s2) -> s1.equals(s2);
+   	System.out.println(pre1.test("abc","abc"));
+   
+   	System.out.println("*******************");
+   	BiPredicate<String,String> pre2 = String :: equals;
+   	System.out.println(pre2.test("abc","abd"));
+   }
+   
+   // Function中的R apply(T t)
+   // Employee中的String getName();
+   @Test
+   public void test7() {
+   	Employee employee = new Employee(1001, "Jerry", 23, 6000);
+   
+   
+   	Function<Employee,String> func1 = e -> e.getName();
+   	System.out.println(func1.apply(employee));
+   
+   	System.out.println("*******************");
+   
+   	Function<Employee,String> func2 = Employee::getName;
+   	System.out.println(func2.apply(employee));
+   
+   
+   }
+   ```
+
+
+
+## 构造器引用与数据引用
+
+1. 构造器引用格式：
+
+   类名：：new
+
+2. 构造器引用使用要求：
+
+   和方法引用类似，函数式接口的抽象方法的形参列表和构造器的形参列表一致。抽象方法的返回值类型即为构造器所属的类的类型
+
+3. 构造器引用举例：
+
+   ```java
+   //Supplier中的T get()
+      //Employee的空参构造器：Employee()
+      @Test
+      public void test1(){
+   
+          Supplier<Employee> sup = new Supplier<Employee>() {
+              @Override
+              public Employee get() {
+                  return new Employee();
+              }
+          };
+          System.out.println("*******************");
+   
+          Supplier<Employee>  sup1 = () -> new Employee();
+          System.out.println(sup1.get());
+   
+          System.out.println("*******************");
+   
+          Supplier<Employee>  sup2 = Employee :: new;
+          System.out.println(sup2.get());
+      }
+   
+   //Function中的R apply(T t)
+      @Test
+      public void test2(){
+          Function<Integer,Employee> func1 = id -> new Employee(id);
+          Employee employee = func1.apply(1001);
+          System.out.println(employee);
+   
+          System.out.println("*******************");
+   
+          Function<Integer,Employee> func2 = Employee :: new;
+          Employee employee1 = func2.apply(1002);
+          System.out.println(employee1);
+   
+      }
+   
+   //BiFunction中的R apply(T t,U u)
+      @Test
+      public void test3(){
+          BiFunction<Integer,String,Employee> func1 = (id,name) -> new Employee(id,name);
+          System.out.println(func1.apply(1001,"Tom"));
+   
+          System.out.println("*******************");
+   
+          BiFunction<Integer,String,Employee> func2 = Employee :: new;
+          System.out.println(func2.apply(1002,"Tom"));
+   
+      }
+   ```
+
+4. 数组引用格式：
+
+   数组类型[]::new
+
+5. 数组引用举例：
+
+   ```java
+   //Function中的R apply(T t)
+   @Test
+   public void test4(){
+       Function<Integer,String[]> func1 = length -> new String[length];
+       String[] arr1 = func1.apply(5);
+       System.out.println(Arrays.toString(arr1));
+   
+       System.out.println("*******************");
+   
+       Function<Integer,String[]> func2 = String[] :: new;
+       String[] arr2 = func2.apply(10);
+       System.out.println(Arrays.toString(arr2));
+   
+   }
+   
+   ```
+
+
+
+## Stream API
+
+1. Stream API的理解：
+
+   1. Stream关注的是对数据的运算，与CPU打交道
+
+      集合关注的是数据的存储，与内存打交道
+
+   2. java8提供了一套api,使用这套api可以对内存中的数据进行过滤、排序、映射、归约等操作。类似于sql对数据库中表的相关操作。
+
+2. 注意点：
+
+   ①Stream 自己不会存储元素。
+
+   ②Stream 不会改变源对象。相反，他们会返回一个持有结果的新Stream。
+
+   ③Stream 操作是延迟执行的。这意味着他们会等到需要结果的时候才执行。
+
+3. Stream的使用流程：
+
+   ① Stream的实例化
+
+   ② 一系列的中间操作（过滤、映射、...)
+
+   ③ 终止操作
+
+4. 使用流程的注意点：
+
+   * 一个中间操作链，对数据源的数据进行处理
+   * 一旦执行终止操作，就执行中间操作链，并产生结果。之后，不会再被使用
+
+5. 步骤一：Stream实例化
+
+   ```java
+   //创建 Stream方式一：通过集合
+       @Test
+       public void test1(){
+           List<Employee> employees = EmployeeData.getEmployees();
+   
+   //        default Stream<E> stream() : 返回一个顺序流
+           Stream<Employee> stream = employees.stream();
+   
+   //        default Stream<E> parallelStream() : 返回一个并行流
+           Stream<Employee> parallelStream = employees.parallelStream();
+   
+       }
+   
+       //创建 Stream方式二：通过数组
+       @Test
+       public void test2(){
+           int[] arr = new int[]{1,2,3,4,5,6};
+           //调用Arrays类的static <T> Stream<T> stream(T[] array): 返回一个流
+           IntStream stream = Arrays.stream(arr);
+   
+           Employee e1 = new Employee(1001,"Tom");
+           Employee e2 = new Employee(1002,"Jerry");
+           Employee[] arr1 = new Employee[]{e1,e2};
+           Stream<Employee> stream1 = Arrays.stream(arr1);
+   
+       }
+       //创建 Stream方式三：通过Stream的of()
+       @Test
+       public void test3(){
+   
+           Stream<Integer> stream = Stream.of(1, 2, 3, 4, 5, 6);
+   
+       }
+   
+       //创建 Stream方式四：创建无限流
+       @Test
+       public void test4(){
+   
+   //      迭代
+   //      public static<T> Stream<T> iterate(final T seed, final UnaryOperator<T> f)
+           //遍历前10个偶数
+           Stream.iterate(0, t -> t + 2).limit(10).forEach(System.out::println);
+   
+   
+   //      生成
+   //      public static<T> Stream<T> generate(Supplier<T> s)
+           Stream.generate(Math::random).limit(10).forEach(System.out::println);
+   
+       }
+   ```
+
+6. 步骤二：中间操作
+
+   <a href="https://sm.ms/image/ipYsUnHg13FErh5" target="_blank"><img src="https://i.loli.net/2021/05/27/ipYsUnHg13FErh5.png" ></a>
+
+   <a href="https://sm.ms/image/zTxDkr4s5Y9a1pW" target="_blank"><img src="https://i.loli.net/2021/05/27/zTxDkr4s5Y9a1pW.png" ></a>
+
+   <a href="https://sm.ms/image/aOs16XnRG3gdThc" target="_blank"><img src="https://i.loli.net/2021/05/27/aOs16XnRG3gdThc.png" ></a>
+
+7. 步骤三：终止操作
+
+   <a href="https://sm.ms/image/HwyUlZfb8BMskjD" target="_blank"><img src="https://i.loli.net/2021/05/27/HwyUlZfb8BMskjD.png" ></a>
+
+   <a href="https://sm.ms/image/RSObTl65mkMZF87" target="_blank"><img src="https://i.loli.net/2021/05/27/RSObTl65mkMZF87.png" ></a>
+
+   
+
+<a href="https://sm.ms/image/p5mRVocZt8WrYyu" target="_blank"><img src="https://i.loli.net/2021/05/27/p5mRVocZt8WrYyu.png" ></a>
+
+<a href="https://sm.ms/image/6bfraSwPjV3hpdZ" target="_blank"><img src="https://i.loli.net/2021/05/27/6bfraSwPjV3hpdZ.png" ></a>
+
+Collector需要使用Collectors提供实例。
+
+
+
+<a href="https://sm.ms/image/PQOeqBU2uErdLfm" target="_blank"><img src="https://i.loli.net/2021/05/27/PQOeqBU2uErdLfm.png" ></a>
+
+
+
+```java
+public class StreamAPITest1 {
+
+    //1-筛选与切片
+    @Test
+    public void test1(){
+        List<Employee> list = EmployeeData.getEmployees();
+//        filter(Predicate p)——接收 Lambda ， 从流中排除某些元素。
+        Stream<Employee> stream = list.stream();
+        //练习：查询员工表中薪资大于7000的员工信息
+        stream.filter(e -> e.getSalary() > 7000).forEach(System.out::println);
+
+        System.out.println();
+//        limit(n)——截断流，使其元素不超过给定数量。
+        list.stream().limit(3).forEach(System.out::println);
+        System.out.println();
+
+//        skip(n) —— 跳过元素，返回一个扔掉了前 n 个元素的流。若流中元素不足 n 个，则返回一个空流。与 limit(n) 互补
+        list.stream().skip(3).forEach(System.out::println);
+
+        System.out.println();
+//        distinct()——筛选，通过流所生成元素的 hashCode() 和 equals() 去除重复元素
+
+        list.add(new Employee(1010,"刘强东",40,8000));
+        list.add(new Employee(1010,"刘强东",41,8000));
+        list.add(new Employee(1010,"刘强东",40,8000));
+        list.add(new Employee(1010,"刘强东",40,8000));
+        list.add(new Employee(1010,"刘强东",40,8000));
+
+//        System.out.println(list);
+
+        list.stream().distinct().forEach(System.out::println);
+    }
+
+    //映射
+    @Test
+    public void test2(){
+//        map(Function f)——接收一个函数作为参数，将元素转换成其他形式或提取信息，该函数会被应用到每个元素上，并将其映射成一个新的元素。
+        List<String> list = Arrays.asList("aa", "bb", "cc", "dd");
+        list.stream().map(str -> str.toUpperCase()).forEach(System.out::println);
+
+//        练习1：获取员工姓名长度大于3的员工的姓名。
+        List<Employee> employees = EmployeeData.getEmployees();
+        Stream<String> namesStream = employees.stream().map(Employee::getName);
+        namesStream.filter(name -> name.length() > 3).forEach(System.out::println);
+        System.out.println();
+        //练习2：
+        Stream<Stream<Character>> streamStream = list.stream().map(StreamAPITest1::fromStringToStream);
+        streamStream.forEach(s ->{
+            s.forEach(System.out::println);
+        });
+        System.out.println();
+//        flatMap(Function f)——接收一个函数作为参数，将流中的每个值都换成另一个流，然后把所有流连接成一个流。
+        Stream<Character> characterStream = list.stream().flatMap(StreamAPITest1::fromStringToStream);
+        characterStream.forEach(System.out::println);
+
+    }
+
+    //将字符串中的多个字符构成的集合转换为对应的Stream的实例
+    public static Stream<Character> fromStringToStream(String str){//aa
+        ArrayList<Character> list = new ArrayList<>();
+        for(Character c : str.toCharArray()){
+            list.add(c);
+        }
+       return list.stream();
+
+    }
+
+
+
+    @Test
+    public void test3(){
+        ArrayList list1 = new ArrayList();
+        list1.add(1);
+        list1.add(2);
+        list1.add(3);
+
+        ArrayList list2 = new ArrayList();
+        list2.add(4);
+        list2.add(5);
+        list2.add(6);
+
+//        list1.add(list2);
+        list1.addAll(list2);
+        System.out.println(list1);
+
+    }
+
+    //3-排序
+    @Test
+    public void test4(){
+//        sorted()——自然排序
+        List<Integer> list = Arrays.asList(12, 43, 65, 34, 87, 0, -98, 7);
+        list.stream().sorted().forEach(System.out::println);
+        //抛异常，原因:Employee没有实现Comparable接口
+//        List<Employee> employees = EmployeeData.getEmployees();
+//        employees.stream().sorted().forEach(System.out::println);
+
+
+//        sorted(Comparator com)——定制排序
+
+        List<Employee> employees = EmployeeData.getEmployees();
+        employees.stream().sorted( (e1,e2) -> {
+
+           int ageValue = Integer.compare(e1.getAge(),e2.getAge());
+           if(ageValue != 0){
+               return ageValue;
+           }else{
+               return -Double.compare(e1.getSalary(),e2.getSalary());
+           }
+
+        }).forEach(System.out::println);
+    }
+
+}
+```
+
+```java
+public class StreamAPITest2 {
+
+    //1-匹配与查找
+    @Test
+    public void test1(){
+        List<Employee> employees = EmployeeData.getEmployees();
+
+//        allMatch(Predicate p)——检查是否匹配所有元素。
+//          练习：是否所有的员工的年龄都大于18
+        boolean allMatch = employees.stream().allMatch(e -> e.getAge() > 18);
+        System.out.println(allMatch);
+
+//        anyMatch(Predicate p)——检查是否至少匹配一个元素。
+//         练习：是否存在员工的工资大于 10000
+        boolean anyMatch = employees.stream().anyMatch(e -> e.getSalary() > 10000);
+        System.out.println(anyMatch);
+
+//        noneMatch(Predicate p)——检查是否没有匹配的元素。
+//          练习：是否存在员工姓“雷”
+        boolean noneMatch = employees.stream().noneMatch(e -> e.getName().startsWith("雷"));
+        System.out.println(noneMatch);
+//        findFirst——返回第一个元素
+        Optional<Employee> employee = employees.stream().findFirst();
+        System.out.println(employee);
+//        findAny——返回当前流中的任意元素
+        Optional<Employee> employee1 = employees.parallelStream().findAny();
+        System.out.println(employee1);
+
+    }
+
+    @Test
+    public void test2(){
+        List<Employee> employees = EmployeeData.getEmployees();
+        // count——返回流中元素的总个数
+        long count = employees.stream().filter(e -> e.getSalary() > 5000).count();
+        System.out.println(count);
+//        max(Comparator c)——返回流中最大值
+//        练习：返回最高的工资：
+        Stream<Double> salaryStream = employees.stream().map(e -> e.getSalary());
+        Optional<Double> maxSalary = salaryStream.max(Double::compare);
+        System.out.println(maxSalary);
+//        min(Comparator c)——返回流中最小值
+//        练习：返回最低工资的员工
+        Optional<Employee> employee = employees.stream().min((e1, e2) -> Double.compare(e1.getSalary(), e2.getSalary()));
+        System.out.println(employee);
+        System.out.println();
+//        forEach(Consumer c)——内部迭代
+        employees.stream().forEach(System.out::println);
+
+        //使用集合的遍历操作
+        employees.forEach(System.out::println);
+    }
+
+    //2-归约
+    @Test
+    public void test3(){
+//        reduce(T identity, BinaryOperator)——可以将流中元素反复结合起来，得到一个值。返回 T
+//        练习1：计算1-10的自然数的和
+        List<Integer> list = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
+        Integer sum = list.stream().reduce(0, Integer::sum);
+        System.out.println(sum);
+
+
+//        reduce(BinaryOperator) ——可以将流中元素反复结合起来，得到一个值。返回 Optional<T>
+//        练习2：计算公司所有员工工资的总和
+        List<Employee> employees = EmployeeData.getEmployees();
+        Stream<Double> salaryStream = employees.stream().map(Employee::getSalary);
+//        Optional<Double> sumMoney = salaryStream.reduce(Double::sum);
+        Optional<Double> sumMoney = salaryStream.reduce((d1,d2) -> d1 + d2);
+        System.out.println(sumMoney.get());
+
+    }
+
+    //3-收集
+    @Test
+    public void test4(){
+//        collect(Collector c)——将流转换为其他形式。接收一个 Collector接口的实现，用于给Stream中元素做汇总的方法
+//        练习1：查找工资大于6000的员工，结果返回为一个List或Set
+
+        List<Employee> employees = EmployeeData.getEmployees();
+        List<Employee> employeeList = employees.stream().filter(e -> e.getSalary() > 6000).collect(Collectors.toList());
+
+        employeeList.forEach(System.out::println);
+        System.out.println();
+        Set<Employee> employeeSet = employees.stream().filter(e -> e.getSalary() > 6000).collect(Collectors.toSet());
+
+        employeeSet.forEach(System.out::println);
+
+
+
+
+    }
+}
+```
+
+
+
+
+
+## Option类的使用
+
+java.util.Optional类
+
+1. 理解：为了解决java中的空指针问题而生！
+
+   Optional<T> 类(java.util.Optional) 是一个容器类，它可以保存类型T的值，代表这个值存在。或者仅仅保存null，表示这个值不存在。原来用 null 表示一个值不存在，现在 Optional 可以更好的表达这个概念。并且可以避
+   免空指针异常。
+
+2. 常用方法：
+
+   ```java
+   @Test
+       public void test1(){
+           //empty():创建的Optional对象内部的value = null
+           Optional<Object> op1 = Optional.empty();
+           if(!op1.isPresent()){//Optional封装的数据是否包含数据
+               System.out.println("数据为空");
+   
+           }
+           System.out.println(op1);
+           System.out.println(op1.isPresent());
+           //如果Optional封装的数据value为空，则get()报错。否则，value不为空时，返回value.
+   //        System.out.println(op1.get());
+   
+       }
+   
+       @Test
+       public void test2(){
+           String str = "hello";
+   //        str = null;
+           //of(T t):封装数据t生成Optional对象。要求t非空，否则报错。
+           Optional<String> op1 = Optional.of(str);
+           //get()通常与of()方法搭配使用。用于获取内部的封装的数据value
+           String str1 = op1.get();
+           System.out.println(str1);
+   
+       }
+   
+       @Test
+       public void test3(){
+           String str = "beijing";
+           str = null;
+           //ofNullable(T t) ：封装数据t赋给Optional内部的value。不要求t非空
+           Optional<String> op1 = Optional.ofNullable(str);
+           //orElse(T t1):如果Optional内部的value非空，则返回此value值。如果
+           //value为空，则返回t1.
+           String str2 = op1.orElse("shanghai");
+   
+           System.out.println(str2);//
+   
+   
+       }
+   ```
+
+3. 典型练习：
+
+   能保证如下的方法执行中不会出现空指针的异常。
+
+   ```java
+   //使用Optional类的getGirlName():
+   public String getGirlName2(Boy boy){
+   
+       Optional<Boy> boyOptional = Optional.ofNullable(boy);
+       //此时的boy1一定非空
+       Boy boy1 = boyOptional.orElse(new Boy(new Girl("迪丽热巴")));
+   
+       Girl girl = boy1.getGirl();
+   
+       Optional<Girl> girlOptional = Optional.ofNullable(girl);
+       //girl1一定非空
+       Girl girl1 = girlOptional.orElse(new Girl("古力娜扎"));
+   
+       return girl1.getName();
+   }
+   
+   @Test
+   public void test5(){
+       Boy boy = null;
+       boy = new Boy();
+       boy = new Boy(new Girl("苍老师"));
+       String girlName = getGirlName2(boy);
+       System.out.println(girlName);
+   
+   }
+   ```
+
+
+
+
+
+# 十七、java9&10&11新特性
+
+待续~~
+
+
+
+
 

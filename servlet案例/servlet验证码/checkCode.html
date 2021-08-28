@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--显示随机验证码和a标签-->
+<script>
+    //点击回调方法
+    function changeCheckCode() {
+    //更换图片验证码
+    var img = document.getElementById("checkCodeImg");
+    //创建一个时间对象
+    var now=new Date();
+    //在url加一个请求参数，让浏览器每次点击重新发送请求
+    img.setAttribute("src","checkCodeServlet?time="+now.getTime());
+    }
+</script>
+<img id="checkCodeImg"  src="checkCodeServlet" onclick="changeCheckCode()"/>
+<a href="#" onclick="changeCheckCode()">看不清楚？换一张</a>
+</body>
+</html>

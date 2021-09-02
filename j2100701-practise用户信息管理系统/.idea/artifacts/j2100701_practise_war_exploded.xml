@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="j2100701-practise:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/j2100701_practise_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="j2100701-practise/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="j2100701-practise" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="jstl-1.2" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

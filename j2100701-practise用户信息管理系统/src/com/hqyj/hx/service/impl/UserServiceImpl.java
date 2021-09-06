@@ -109,4 +109,12 @@ public class UserServiceImpl  implements UserService {
         int affectedRows = userDao.updateOne(user);
         return affectedRows>0;
     }
+
+    @Override
+    public User login(String username, String password) {
+        if(username==null||password==null){
+            return null;
+        }
+        return userDao.queryByUsernameAndPassword(username,password);
+    }
 }

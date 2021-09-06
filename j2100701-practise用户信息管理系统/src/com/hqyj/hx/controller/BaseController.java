@@ -6,6 +6,7 @@ import com.hqyj.hx.pojo.User;
 import com.hqyj.hx.service.UserService;
 import com.hqyj.hx.service.impl.UserServiceImpl;
 import com.sun.xml.internal.ws.server.sei.TieHandler;
+import org.junit.Test;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -92,5 +93,10 @@ public class BaseController  extends HttpServlet {
             req.getRequestDispatcher(result).forward(req,resp);
         }
 
+    }
+    @Test
+    public void t(){
+        System.out.println(this.getClass());
+        System.out.println(this);
     }
 }

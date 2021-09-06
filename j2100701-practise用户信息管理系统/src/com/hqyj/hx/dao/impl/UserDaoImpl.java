@@ -180,4 +180,35 @@ public class UserDaoImpl implements UserDao {
         }
         return 0;
     }
+
+    @Override
+    public User queryByUsernameAndPassword(String username, String password) {
+        //limit分页查询
+        String sql = "select id,name,sex,address,phone,email,username,password,deleted,updatetime from user where username=? and password=?";
+        //通过JdbcUtil获取数据库连接
+        try(Connection connection = JdbcUtil.getConnection();
+            //获取PreparedStatement对象
+            PreparedStatement ps = connection.prepareStatement(sql);){
+            //填充占位符
+            ps.setString(1,username);
+            ps.setString(2,password);
+            //执行结果集
+            try(ResultSet rs = ps.executeQuery()) {
+                //遍历结果集
+                    if(rs.next()) {
+                    //将user表的数据，封装成User对象
+                    User user = new User(rs.getInt("id"), rs.getString("name"),
+                            rs.getInt("sex"), rs.getString("address"),
+                            rs.getString("phone"), rs.getString("email"),
+                            rs.getString("username"), rs.getString("password"),
+                            rs.getInt("deleted"), rs.getTimestamp("updatetime"));
+                    return user;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //返回用户列表
+        return null;
+    }
 }

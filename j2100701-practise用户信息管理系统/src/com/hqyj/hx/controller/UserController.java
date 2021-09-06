@@ -3,6 +3,7 @@ package com.hqyj.hx.controller;
 import com.hqyj.hx.pojo.PageData;
 import com.hqyj.hx.pojo.User;
 import com.hqyj.hx.service.UserService;
+import com.sun.org.apache.regexp.internal.RE;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -189,6 +190,29 @@ public class UserController extends BaseController {
             request.setAttribute("message", "用户编辑失败");
             return "/jsp/userEdit.jsp";
         }
+    }
+
+    public String login(HttpServletRequest request,HttpServletResponse response){
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        User loginUser = userService.login(username, password);
+
+        if(loginUser!=null){
+            //在session域共享登录用户信息
+            HttpSession session = request.getSession();
+            session.setAttribute("loginUser",loginUser);
+            //重定向到首页
+
+            String contextPath=request.getContextPath();
+            return "redirect:"+contextPath+"/index.jsp";
+        }else {
+            //登录失败
+            //请求转发
+            request.setAttribute("message","用户名或密码错误");
+            return "/jsp/login.jsp";
+        }
+
     }
 
 }

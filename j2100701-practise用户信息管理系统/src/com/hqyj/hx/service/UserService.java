@@ -25,4 +25,7 @@ public interface UserService {
    User getOneById(int userId);
    //编辑一个用户的信息系
    boolean editOne(User user);
+
+   //用户登录
+    User login(String username,String password);
 }

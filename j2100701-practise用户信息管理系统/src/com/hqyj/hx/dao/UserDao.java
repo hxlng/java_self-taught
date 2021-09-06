@@ -56,4 +56,7 @@ public interface UserDao {
     //更新一个用户的信息 ,使用useId来识别，其他属性来更新
     int updateOne(User user);
 
+    //账户和密码查询用户
+    User queryByUsernameAndPassword(String username,String password);
+
 }

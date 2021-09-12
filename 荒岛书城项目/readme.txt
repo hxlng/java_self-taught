@@ -1,0 +1,11 @@
+用到的技术
+html+css+JavaScript
+jQuery
+Xml
+Tomcat
+Servlet
+jsp
+El表达式+JSTL标签
+cookie、session
+filter
+JSON、ajax
